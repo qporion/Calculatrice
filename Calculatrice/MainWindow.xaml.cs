@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Calculatrice.Model;
+
 namespace Calculatrice
 {
     /// <summary>
@@ -21,9 +23,15 @@ namespace Calculatrice
     /// </summary>
     public partial class MainWindow : Window
     {
+        private List<char> listPattern;
         public MainWindow()
         {
             InitializeComponent();
+            this.listPattern = new List<char>();
+            listPattern.Add('-');
+            listPattern.Add('+');
+            listPattern.Add('/');
+            listPattern.Add('*');
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -32,7 +40,7 @@ namespace Calculatrice
 
             var strCalcul = entryCalcul.Text + button.Content;
 
-            if(verifyString(strCalcul))
+            if(verifyString(getOperations(strCalcul)))
             {
                 entryCalcul.Text += button.Content;
             }
@@ -46,70 +54,167 @@ namespace Calculatrice
                     entryCalcul.Text = "";
                     break;
                 case Key.Enter:
-                    entryCalcul.Text = calculStr(entryCalcul.Text).ToString();
+                    var op = getOperations(entryCalcul.Text);
+                    entryCalcul.Text = calculOperation(op).ToString();
                     break;
             } 
         }
 
-        private bool verifyString(String strCalcul) //^(\w |\-)+((\w |\-)+(,|\+|\(|\*|\)))+(\w +)$
+        private bool verifyString(Operation listCalcul) //^(\w |\-)+((\w |\-)+(,|\+|\(|\*|\)))+(\w +)$
         {
-            foreach (String str in getListWithString(strCalcul))
+            /*var isValid = true;
+            foreach (Object item in listCalcul)
             {
-                if (str.Count( c => c == ',') > 1)
+                if (item.GetType() == typeof(List<Object>))
                 {
-                    return false;
+                    isValid = verifyString(item as List<Object>);
+                } else
+                {
+                    var str = item as String;
+                    if (str.Count(c => c == ',') > 1)
+                    {
+                        return false;
+                    }
+
+                    if (Char.Equals(str.ElementAt(0), ','))
+                    {
+                        return false;
+                    }
                 }
-            }
+            }*/
 
             return true;
         }
 
-        private List<String> getListWithString(String str)
+        private Operation getOperations(String str, Operation leftOp = null)
         {
-            List<String> listStrCalcul = new List<String>();
-            List<char> listPattern = new List<char>();
-            listPattern.Add('-');
-            listPattern.Add('+');
-            listPattern.Add('/');
-            listPattern.Add('*');
+            Operation op = new Operation();
+            Operation leftValue = leftOp;
+            Operation rightvalue;
 
-            var tmpStr = "";
-            for (var i = 0; i < str.Length; i++)
+            //leftValue = paraanthèses
+            // right value right text after operande
+
+            if ( Char.Equals(str.ElementAt(0), '('))
             {
-                if (listPattern.Contains(str.ElementAt(i)))
+
+                var tmp = str.Substring(1, str.LastIndexOf(')') - 1);
+
+                op.valueLeft = getOperations(tmp);
+
+                var idxStart = 0;
+                for (int i = str.LastIndexOf(')'); i < str.Length; i++)
                 {
-                    if (Char.Equals(str.ElementAt(i), '-') && !(Char.IsNumber(str.ElementAtOrDefault(i-1)) || Char.Equals(str.ElementAtOrDefault(i - 1), ')')))
+                    if (this.listPattern.Contains(str.ElementAt(i)))
                     {
-                        tmpStr += str.ElementAt(i);
-                    }
-                    else
-                    {
-                        listStrCalcul.Add(tmpStr);
-                        listStrCalcul.Add("" + str.ElementAt(i));
-                        tmpStr = "";
+                        idxStart = i;
+                        break;
                     }
                 }
-                else
+
+                op.operande = ""+str.ElementAt(idxStart);
+                op.valueRight = getOperations(str.Substring(idxStart+1));
+            } else
+            {
+                for (var idx = 0; idx < str.Length; idx++)
                 {
-                    tmpStr += str.ElementAt(i);
+                    switch (str.ElementAt(idx))
+                    {
+                        case '+':
+                        case '-':
+
+                            if (leftValue == null)
+                            {
+                                leftValue = getOperations(str.Substring(0, idx));
+
+                            }
+                            rightvalue = getOperations(str.Substring(idx + 1));
+                            op.valueRight = rightvalue;
+
+                            op.valueLeft = leftValue;
+                            op.operande = "" + str.ElementAt(idx);
+
+                            return op;
+                            break;
+                        case '*':
+                        case '/':
+
+                            if (leftValue == null)
+                            {
+                                leftValue = getOperations(str.Substring(0, idx));
+                            }
+                            op.valueLeft = leftValue;
+
+                            op.operande = "" + str.ElementAt(idx);
+
+                            int idxEnd = 0;
+                            for (int i = idx + 1; i < str.Length; i++)
+                            {
+                                if (!Char.IsDigit(str.ElementAt(i)) && !Char.Equals(str.ElementAt(i), ','))
+                                {
+                                    idxEnd = i;
+                                    break;
+                                }
+                            }
+                            rightvalue = new Operation();
+
+                            if (idxEnd == 0)
+                            {
+                                var tmp = str.Substring(idx + 1);
+                                rightvalue.value = Convert.ToDouble(tmp);
+                            }
+                            else
+                            {
+                                rightvalue.value = Convert.ToDouble(str.Substring(idx + 1, idxEnd - (idx + 1)));
+                            }
+
+                            op.valueRight = rightvalue;
+
+                            if (idxEnd == 0)
+                            {
+                                return op;
+                            }
+                            return getOperations(str.Substring(idxEnd), op);
+
+                            break;
+                    }
                 }
+
+                op.value = Convert.ToDouble(str);
             }
 
-            listStrCalcul.Add(tmpStr);
-
-            return listStrCalcul;
+            return op;
         }
 
-        private float calculStr(String str)
+        private double calculOperation(Operation ops)
         {
-            List<String> listCalcul = getListWithString(str);
-
-            foreach (String strList in listCalcul)
+            if (ops.valueLeft == null && ops.valueRight == null)
             {
-                
+                return ops.value;
             }
+            else
+            {
+                double left = calculOperation(ops.valueLeft);
+                double right = calculOperation(ops.valueRight);
 
-            return 0;
+                switch(ops.operande)
+                {
+                    case "+":
+                        return left + right;
+                        break;
+                    case "-":
+                        return left - right;
+                        break;
+                    case "*":
+                        return left * right;
+                        break;
+                    case "/":
+                        return left / right;
+                        break;
+                    default:
+                        return 0;
+                }
+            }
         }
     }
 }

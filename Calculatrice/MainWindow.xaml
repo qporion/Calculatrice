@@ -12,7 +12,7 @@
             <RowDefinition Height="20*"/>
             <RowDefinition Height="50*"/>
         </Grid.RowDefinitions>
-        <Grid x:Name="mainGrid" HorizontalAlignment="Center" VerticalAlignment="Center" ShowGridLines="True" Height="334" RenderTransformOrigin="0.5,0.5" Width="513" Grid.RowSpan="3">
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" ShowGridLines="True" Height="334" RenderTransformOrigin="0.5,0.5" Width="513" Grid.RowSpan="3">
         </Grid>
         <TextBox x:Name="entryCalcul" HorizontalAlignment="Left" Height="88" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="514" KeyDown="OnKeyDownHandler"/>
         <Grid HorizontalAlignment="Left" Grid.Row="2" Height="155" VerticalAlignment="Top" Width="515">
