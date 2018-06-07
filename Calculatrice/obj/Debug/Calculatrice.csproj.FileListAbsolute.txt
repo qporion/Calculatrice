@@ -1,0 +1,14 @@
+F:\c#\Calculatrice\Calculatrice\bin\Debug\Calculatrice.exe.config
+F:\c#\Calculatrice\Calculatrice\bin\Debug\Calculatrice.exe
+F:\c#\Calculatrice\Calculatrice\bin\Debug\Calculatrice.pdb
+F:\c#\Calculatrice\Calculatrice\obj\Debug\Calculatrice.csprojResolveAssemblyReference.cache
+F:\c#\Calculatrice\Calculatrice\obj\Debug\MainWindow.g.cs
+F:\c#\Calculatrice\Calculatrice\obj\Debug\App.g.cs
+F:\c#\Calculatrice\Calculatrice\obj\Debug\Calculatrice_MarkupCompile.cache
+F:\c#\Calculatrice\Calculatrice\obj\Debug\Calculatrice_MarkupCompile.lref
+F:\c#\Calculatrice\Calculatrice\obj\Debug\MainWindow.baml
+F:\c#\Calculatrice\Calculatrice\obj\Debug\Calculatrice.g.resources
+F:\c#\Calculatrice\Calculatrice\obj\Debug\Calculatrice.Properties.Resources.resources
+F:\c#\Calculatrice\Calculatrice\obj\Debug\Calculatrice.csproj.GenerateResource.Cache
+F:\c#\Calculatrice\Calculatrice\obj\Debug\Calculatrice.exe
+F:\c#\Calculatrice\Calculatrice\obj\Debug\Calculatrice.pdb
