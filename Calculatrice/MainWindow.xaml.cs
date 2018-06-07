@@ -24,5 +24,12 @@ namespace Calculatrice
         {
             InitializeComponent();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+
+            entryCalcul.Text += button.Content;
+        }
     }
 }
