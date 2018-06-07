@@ -14,7 +14,7 @@
         </Grid.RowDefinitions>
         <Grid x:Name="mainGrid" HorizontalAlignment="Center" VerticalAlignment="Center" ShowGridLines="True" Height="334" RenderTransformOrigin="0.5,0.5" Width="513" Grid.RowSpan="3">
         </Grid>
-        <TextBox x:Name="entryCalcul" HorizontalAlignment="Left" Height="88" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="514"/>
+        <TextBox x:Name="entryCalcul" HorizontalAlignment="Left" Height="88" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="514" KeyDown="OnKeyDownHandler"/>
         <Grid HorizontalAlignment="Left" Grid.Row="2" Height="155" VerticalAlignment="Top" Width="515">
             <Button Content="7" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
             <Button Content="8" HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
