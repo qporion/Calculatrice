@@ -36,7 +36,7 @@ namespace Calculatrice
             listPattern.Add('/');
             listPattern.Add('*');
 
-            entryCalcul.Text = "5+3+(3*4+2)*2+1-3";
+            entryCalcul.Text = "5+3+(3*4+2)*(5*3+6)+1-3";
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -102,14 +102,28 @@ namespace Calculatrice
 
             if ( Char.Equals(str.ElementAt(0), '('))
             {
-                var strWithoutParantheses = str.Substring(1, str.LastIndexOf(')') - 1);
-
-                op.valueLeft = getOperations(strWithoutParantheses);
-
+                //Récupération de l'index de la première opérande après les parenthèses
                 var idxStart = 0;
-                for (int i = str.LastIndexOf(')'); i < str.Length; i++)
+                var cptParantheses = 0;
+                var idxEndParantheses = -1;
+                for (int i = 0; i < str.Length; i++)
                 {
-                    if (this.listPattern.Contains(str.ElementAt(i)))
+                    if (Char.Equals(str.ElementAt(i), '('))
+                    {
+                        cptParantheses++;
+                    }
+
+                    if (Char.Equals(str.ElementAt(i), ')'))
+                    {
+                        cptParantheses--;
+
+                        if (cptParantheses == 0)
+                        {
+                            idxEndParantheses = i;
+                        }
+                    }
+
+                    if (this.listPattern.Contains(str.ElementAt(i)) && cptParantheses == 0)
                     {
                         idxStart = i;
                         break;
@@ -118,20 +132,40 @@ namespace Calculatrice
 
                 op.operande = ""+str.ElementAt(idxStart);
 
+                //La valeur de gauche est égale au contenu des parenthèses
+                op.valueLeft = getOperations(str.Substring(1, idxEndParantheses - 1));
+
+                //En cas de divisions ou de multiplications on met le reste dans l'enfant de droite et on envois l'Opération pour quelle soit bien placée
+                //Pour less addition et soustractions on met le reste dans l'enfant de droite
                 var strAfterParantheses = str.Substring(idxStart + 1);
                 if ( Char.Equals((char)Operande.Diviser, op.operande.ElementAt(0)) || Char.Equals((char)Operande.Multiplier, op.operande.ElementAt(0)))
                 {
                     int idxEnd = 0;
+                    idxStart = 0;
+                    cptParantheses = 0;
                     for (int i = 0; i < strAfterParantheses.Length; i++)
                     {
-                        if (!Char.IsDigit(strAfterParantheses.ElementAt(i)) && !Char.Equals(strAfterParantheses.ElementAt(i), ','))
+                        if (Char.Equals(strAfterParantheses.ElementAt(i), '('))
+                        {
+                            cptParantheses++;
+                            idxStart = i + 1;
+                        }
+
+                        if (!Char.IsDigit(strAfterParantheses.ElementAt(i)) && !Char.Equals(strAfterParantheses.ElementAt(i), ',') && cptParantheses == 0) 
                         {
                             idxEnd = i;
                             break;
                         }
+
+                        if (Char.Equals(strAfterParantheses.ElementAt(i), ')'))
+                        {
+                            cptParantheses--;
+                        }
                     }
 
-                    op.valueRight = getOperations(strAfterParantheses.Substring(0, idxEnd));
+                    var tmp = strAfterParantheses.Substring(idxStart, idxEnd-(idxStart*2));
+                    var tmp2 = strAfterParantheses.Substring(idxEnd);
+                    op.valueRight = getOperations(tmp);
                     return getOperations(strAfterParantheses.Substring(idxEnd), op);
                 } else
                 {
@@ -145,23 +179,28 @@ namespace Calculatrice
                     switch ( str.ElementAt(idx))
                     {
                         case (char) Operande.Plus:
-                        case (char)Operande.Moins:
+                        case (char) Operande.Moins:
 
+                            //Si un enfant est envoyé c'est par les multiplication ou division, on le met à gauche
+                            //Sinon on met tout ce qui est à gauche de l'opérande dans l'enfant de gauche et pareil pour la droite
                             if (leftValue == null)
                             {
-                                leftValue = getOperations(str.Substring(0, idx));
+                                var tmp3 = str.Substring(0, idx);
+                                leftValue = getOperations(tmp3);
 
                             }
-                            rightvalue = getOperations(str.Substring(idx + 1));
+
+                            var tmp4 = str.Substring(idx + 1);
+                            rightvalue = getOperations(tmp4);
                             op.valueRight = rightvalue;
 
                             op.valueLeft = leftValue;
                             op.operande = "" + str.ElementAt(idx);
 
                             return op;
-                        case (char)Operande.Multiplier:
-                        case (char)Operande.Diviser:
-
+                        case (char) Operande.Multiplier:
+                        case (char) Operande.Diviser:
+                            // Pareil que les additions et soustractions sauf qu'on envois l'object à l'enfant qui deviendra parent de cet objet
                             if (leftValue == null)
                             {
                                 leftValue = getOperations(str.Substring(0, idx));
