@@ -18,7 +18,7 @@ using Calculatrice.Model;
 
 namespace Calculatrice
 {
-    enum Operande { Moins = '-', Plus = '+', Multiplier = '*', Diviser = '/'};
+    enum Operande { Moins = '-', Plus = '+', Multiplier = '*', Diviser = '/', Modulo = '%'};
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
@@ -35,17 +35,23 @@ namespace Calculatrice
             listPattern.Add('+');
             listPattern.Add('/');
             listPattern.Add('*');
+            listPattern.Add('%');
 
             entryCalcul.Text = "5+3+(3*4+2)*(5*3+6)+1-3";
+            entryCalcul.Text = "5*6/3+(3*2+1)+3*4+(5*6+(6/9)*5+5-(4+6+(4+5)))";
+            entryCalcul.Text = "5*6/3+(3*2+1)+3*4";
+            entryCalcul.Text = "5+3*4+2";
+            entryCalcul.Text = "5,4543+3,454+(3,565*4,3+2,0034)*(5,43*3+6)+1,34-3";
+            entryCalcul.Text = "5*6/3+4(3*2+1)3+3*4";
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
 
-            var strCalcul = entryCalcul.Text + button.Content;
+            var str = entryCalcul.Text + button.Content;
 
-            if(verifyString(getOperations(strCalcul)))
+            if(verifyString(str))
             {
                 entryCalcul.Text += button.Content;
             }
@@ -59,39 +65,114 @@ namespace Calculatrice
                     entryCalcul.Text = "";
                     break;
                 case Key.Enter:
-                    var op = getOperations(entryCalcul.Text);
-                    entryCalcul.Text = calculOperation(op).ToString();
+                    var str = entryCalcul.Text;
+                    if (validParantheses(str))
+                    {
+                        str = replaceForgotOperande(str);
+                        var op = buildOperationsTree(str);
+                        entryCalcul.Text = calcul(op).ToString();
+                    }
                     break;
             } 
         }
 
-        private bool verifyString(Operation listCalcul) //^(\w |\-)+((\w |\-)+(,|\+|\(|\*|\)))+(\w +)$
+        private bool verifyString(String str)
         {
-            /*var isValid = true;
-            foreach (Object item in listCalcul)
-            {
-                if (item.GetType() == typeof(List<Object>))
-                {
-                    isValid = verifyString(item as List<Object>);
-                } else
-                {
-                    var str = item as String;
-                    if (str.Count(c => c == ',') > 1)
-                    {
-                        return false;
-                    }
+            var isValid = true;
+            isValid = validComma(str);
+            isValid = validOperande(str) && isValid;
 
-                    if (Char.Equals(str.ElementAt(0), ','))
+            return isValid;
+        }
+
+        private bool validComma(String str)
+        {
+            var cptComma = 0;
+            for(var i=0; i<str.Length; i++)
+            {
+                if(Char.Equals(str.ElementAt(i), ','))
+                {
+                    cptComma++;
+
+                    if(cptComma > 1 || !Char.IsDigit(str.ElementAtOrDefault(i-1)))
                     {
                         return false;
                     }
                 }
-            }*/
+
+                if (this.listPattern.Contains(str.ElementAt(i)))
+                {
+                    cptComma = 0;
+                }
+            }
 
             return true;
         }
 
-        private Operation getOperations(String str, Operation leftOp = null)
+        private bool validOperande(String str)
+        {
+            for (var i = 0; i < str.Length; i++)
+            {
+                if (this.listPattern.Contains(str.ElementAt(i)))
+                {
+                    if (!Char.IsDigit(str.ElementAtOrDefault(i - 1)))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private bool validParantheses(String str)
+        {
+            Stack<String> stack = new Stack<String>();
+
+            for (var i = 0; i < str.Length; i++)
+            {
+                if (Char.Equals(str.ElementAt(i), '('))
+                {
+                    stack.Push(":D");
+                }
+
+                if (Char.Equals(str.ElementAt(i), ')'))
+                {
+                    if (stack.Count == 0)
+                    {
+                        return false;
+                    }
+                    stack.Pop();
+                }
+            }
+
+            return stack.Count == 0;
+        }
+
+        private String replaceForgotOperande(String str)
+        {
+            var returnStr = "";
+            var lastIdx = 0;
+
+            for(var i=0; i<str.Length; i++)
+            {
+                if (Char.Equals(str.ElementAt(i), '(') && (Char.IsDigit(str.ElementAtOrDefault(i-1)) || Char.Equals(str.ElementAtOrDefault(i-1), ')')))
+                {
+                    returnStr += "*";
+                }
+
+                returnStr += str.ElementAt(i);
+
+                if (Char.Equals(str.ElementAt(i), ')') && Char.IsDigit(str.ElementAtOrDefault(i + 1)))
+                {
+                    returnStr += "*";
+                }
+            }
+
+            return returnStr;
+        }
+
+        private Operation buildOperationsTree(String str, Operation leftOp = null)
         {
             Operation op = new Operation();
             Operation leftValue = leftOp;
@@ -113,6 +194,12 @@ namespace Calculatrice
                         cptParantheses++;
                     }
 
+                    if (this.listPattern.Contains(str.ElementAt(i)) && cptParantheses == 0)
+                    {
+                        idxStart = i;
+                        break;
+                    }
+
                     if (Char.Equals(str.ElementAt(i), ')'))
                     {
                         cptParantheses--;
@@ -122,23 +209,22 @@ namespace Calculatrice
                             idxEndParantheses = i;
                         }
                     }
-
-                    if (this.listPattern.Contains(str.ElementAt(i)) && cptParantheses == 0)
-                    {
-                        idxStart = i;
-                        break;
-                    }
                 }
 
+                if (idxStart == 0)
+                {
+                    return buildOperationsTree(str.Substring(1, str.Length - 2));
+                }
                 op.operande = ""+str.ElementAt(idxStart);
 
                 //La valeur de gauche est égale au contenu des parenthèses
-                op.valueLeft = getOperations(str.Substring(1, idxEndParantheses - 1));
+                op.valueLeft = buildOperationsTree(str.Substring(1, idxEndParantheses - 1));
 
                 //En cas de divisions ou de multiplications on met le reste dans l'enfant de droite et on envois l'Opération pour quelle soit bien placée
                 //Pour less addition et soustractions on met le reste dans l'enfant de droite
                 var strAfterParantheses = str.Substring(idxStart + 1);
-                if ( Char.Equals((char)Operande.Diviser, op.operande.ElementAt(0)) || Char.Equals((char)Operande.Multiplier, op.operande.ElementAt(0)))
+                if ( Char.Equals((char)Operande.Diviser, op.operande.ElementAt(0)) || Char.Equals((char)Operande.Multiplier, op.operande.ElementAt(0))
+                    || Char.Equals((char)Operande.Modulo, op.operande.ElementAt(0)))
                 {
                     int idxEnd = 0;
                     idxStart = 0;
@@ -163,13 +249,11 @@ namespace Calculatrice
                         }
                     }
 
-                    var tmp = strAfterParantheses.Substring(idxStart, idxEnd-(idxStart*2));
-                    var tmp2 = strAfterParantheses.Substring(idxEnd);
-                    op.valueRight = getOperations(tmp);
-                    return getOperations(strAfterParantheses.Substring(idxEnd), op);
+                    op.valueRight = buildOperationsTree(strAfterParantheses.Substring(idxStart, idxEnd - (idxStart * 2)));
+                    return buildOperationsTree(strAfterParantheses.Substring(idxEnd), op);
                 } else
                 {
-                    op.valueRight = getOperations(strAfterParantheses);
+                    op.valueRight = buildOperationsTree(strAfterParantheses);
                 }
                
             } else
@@ -185,13 +269,10 @@ namespace Calculatrice
                             //Sinon on met tout ce qui est à gauche de l'opérande dans l'enfant de gauche et pareil pour la droite
                             if (leftValue == null)
                             {
-                                var tmp3 = str.Substring(0, idx);
-                                leftValue = getOperations(tmp3);
-
+                                leftValue = buildOperationsTree(str.Substring(0, idx));
                             }
-
-                            var tmp4 = str.Substring(idx + 1);
-                            rightvalue = getOperations(tmp4);
+                            
+                            rightvalue = buildOperationsTree(str.Substring(idx + 1));
                             op.valueRight = rightvalue;
 
                             op.valueLeft = leftValue;
@@ -200,21 +281,48 @@ namespace Calculatrice
                             return op;
                         case (char) Operande.Multiplier:
                         case (char) Operande.Diviser:
+                        case (char) Operande.Modulo:
                             // Pareil que les additions et soustractions sauf qu'on envois l'object à l'enfant qui deviendra parent de cet objet
                             if (leftValue == null)
                             {
-                                leftValue = getOperations(str.Substring(0, idx));
+                                leftValue = buildOperationsTree(str.Substring(0, idx));
                             }
                             op.valueLeft = leftValue;
 
                             op.operande = "" + str.ElementAt(idx);
 
+                            bool isParentheses = false;
                             int idxEnd = 0;
                             for (int i = idx + 1; i < str.Length; i++)
                             {
                                 if (!Char.IsDigit(str.ElementAt(i)) && !Char.Equals(str.ElementAt(i), ','))
                                 {
                                     idxEnd = i;
+
+                                    if (Char.Equals(str.ElementAt(i), '('))
+                                    {
+
+                                        var cptParantheses = 0;
+                                        for (int j = i; j < str.Length; j++)
+                                        {
+                                            if (Char.Equals(str.ElementAt(j), '('))
+                                            {
+                                                cptParantheses++;
+                                            }
+
+                                            if (Char.Equals(str.ElementAt(j), ')'))
+                                            {
+                                                cptParantheses--;
+
+                                                if (cptParantheses == 0)
+                                                {
+                                                    isParentheses = true;
+                                                    idxEnd = j;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
                                     break;
                                 }
                             }
@@ -222,8 +330,12 @@ namespace Calculatrice
 
                             if (idxEnd == 0)
                             {
-                                var tmp = str.Substring(idx + 1);
-                                rightvalue.value = Convert.ToDouble(tmp);
+                                rightvalue.value = Convert.ToDouble(str.Substring(idx + 1));
+                            }
+                            else if(isParentheses)
+                            {
+                                var tmp = str.Substring(idx + 1, idxEnd - (idx));
+                                rightvalue = buildOperationsTree(tmp);
                             }
                             else
                             {
@@ -236,7 +348,7 @@ namespace Calculatrice
                             {
                                 return op;
                             }
-                            return getOperations(str.Substring(idxEnd), op);
+                            return buildOperationsTree(str.Substring(idxEnd), op);
                     }
                 }
 
@@ -246,7 +358,7 @@ namespace Calculatrice
             return op;
         }
 
-        private double calculOperation(Operation ops)
+        private double calcul(Operation ops)
         {
             if (ops.valueLeft == null && ops.valueRight == null)
             {
@@ -254,8 +366,8 @@ namespace Calculatrice
             }
             else
             {
-                double left = calculOperation(ops.valueLeft);
-                double right = calculOperation(ops.valueRight);
+                double left = calcul(ops.valueLeft);
+                double right = calcul(ops.valueRight);
 
                 switch(ops.operande)
                 {
@@ -266,7 +378,13 @@ namespace Calculatrice
                     case "*":
                         return left * right;
                     case "/":
+                        if (right == 0) //@TODO gérer exception
+                        {
+                            return 0;
+                        }
                         return left / right;
+                    case "%":
+                        return left % right;
                     default:
                         return 0;
                 }
