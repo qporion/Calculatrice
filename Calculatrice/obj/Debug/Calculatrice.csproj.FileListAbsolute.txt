@@ -12,3 +12,18 @@ F:\c#\Calculatrice\Calculatrice\obj\Debug\Calculatrice.Properties.Resources.reso
 F:\c#\Calculatrice\Calculatrice\obj\Debug\Calculatrice.csproj.GenerateResource.Cache
 F:\c#\Calculatrice\Calculatrice\obj\Debug\Calculatrice.exe
 F:\c#\Calculatrice\Calculatrice\obj\Debug\Calculatrice.pdb
+D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\bin\Debug\Calculatrice.exe.config
+D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\bin\Debug\Calculatrice.exe
+D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\bin\Debug\Calculatrice.pdb
+D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\Calculatrice.csprojAssemblyReference.cache
+D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\MainWindow.g.cs
+D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\App.g.cs
+D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\Calculatrice_MarkupCompile.cache
+D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\Calculatrice_MarkupCompile.lref
+D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\MainWindow.baml
+D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\Calculatrice.g.resources
+D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\Calculatrice.Properties.Resources.resources
+D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\Calculatrice.csproj.GenerateResource.cache
+D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\Calculatrice.csproj.CoreCompileInputs.cache
+D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\Calculatrice.exe
+D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\Calculatrice.pdb

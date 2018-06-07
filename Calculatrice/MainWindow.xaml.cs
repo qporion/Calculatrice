@@ -18,12 +18,15 @@ using Calculatrice.Model;
 
 namespace Calculatrice
 {
+    enum Operande { Moins = '-', Plus = '+', Multiplier = '*', Diviser = '/'};
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
         private List<char> listPattern;
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -32,6 +35,8 @@ namespace Calculatrice
             listPattern.Add('+');
             listPattern.Add('/');
             listPattern.Add('*');
+
+            entryCalcul.Text = "5+3+(3*4+2)*2+1-3";
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -97,10 +102,9 @@ namespace Calculatrice
 
             if ( Char.Equals(str.ElementAt(0), '('))
             {
+                var strWithoutParantheses = str.Substring(1, str.LastIndexOf(')') - 1);
 
-                var tmp = str.Substring(1, str.LastIndexOf(')') - 1);
-
-                op.valueLeft = getOperations(tmp);
+                op.valueLeft = getOperations(strWithoutParantheses);
 
                 var idxStart = 0;
                 for (int i = str.LastIndexOf(')'); i < str.Length; i++)
@@ -113,15 +117,35 @@ namespace Calculatrice
                 }
 
                 op.operande = ""+str.ElementAt(idxStart);
-                op.valueRight = getOperations(str.Substring(idxStart+1));
+
+                var strAfterParantheses = str.Substring(idxStart + 1);
+                if ( Char.Equals((char)Operande.Diviser, op.operande.ElementAt(0)) || Char.Equals((char)Operande.Multiplier, op.operande.ElementAt(0)))
+                {
+                    int idxEnd = 0;
+                    for (int i = 0; i < strAfterParantheses.Length; i++)
+                    {
+                        if (!Char.IsDigit(strAfterParantheses.ElementAt(i)) && !Char.Equals(strAfterParantheses.ElementAt(i), ','))
+                        {
+                            idxEnd = i;
+                            break;
+                        }
+                    }
+
+                    op.valueRight = getOperations(strAfterParantheses.Substring(0, idxEnd));
+                    return getOperations(strAfterParantheses.Substring(idxEnd), op);
+                } else
+                {
+                    op.valueRight = getOperations(strAfterParantheses);
+                }
+               
             } else
             {
                 for (var idx = 0; idx < str.Length; idx++)
                 {
-                    switch (str.ElementAt(idx))
+                    switch ( str.ElementAt(idx))
                     {
-                        case '+':
-                        case '-':
+                        case (char) Operande.Plus:
+                        case (char)Operande.Moins:
 
                             if (leftValue == null)
                             {
@@ -135,9 +159,8 @@ namespace Calculatrice
                             op.operande = "" + str.ElementAt(idx);
 
                             return op;
-                            break;
-                        case '*':
-                        case '/':
+                        case (char)Operande.Multiplier:
+                        case (char)Operande.Diviser:
 
                             if (leftValue == null)
                             {
@@ -175,8 +198,6 @@ namespace Calculatrice
                                 return op;
                             }
                             return getOperations(str.Substring(idxEnd), op);
-
-                            break;
                     }
                 }
 
@@ -201,16 +222,12 @@ namespace Calculatrice
                 {
                     case "+":
                         return left + right;
-                        break;
                     case "-":
                         return left - right;
-                        break;
                     case "*":
                         return left * right;
-                        break;
                     case "/":
                         return left / right;
-                        break;
                     default:
                         return 0;
                 }
