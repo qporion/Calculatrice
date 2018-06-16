@@ -26,10 +26,13 @@ namespace Calculatrice
     {
         private List<char> listPattern;
 
+        BindingCalcul bindingCalcul = new BindingCalcul();
 
         public MainWindow()
         {
             InitializeComponent();
+
+            this.DataContext = bindingCalcul;
             this.listPattern = new List<char>();
             listPattern.Add('-');
             listPattern.Add('+');
@@ -37,53 +40,50 @@ namespace Calculatrice
             listPattern.Add('*');
             listPattern.Add('%');
 
-            /*entryCalcul.Text = "5+3+(3*4+2)*(5*3+6)+1-3";
-            entryCalcul.Text = "5*6/3+(3*2+1)+3*4+(5*6+(6/9)*5+5-(4+6+(4+5)))";
-            entryCalcul.Text = "5*6/3+(3*2+1)+3*4";
-            entryCalcul.Text = "5+3*4+2";
-            entryCalcul.Text = "5,4543+3,454+(3,565*4,3+2,0034)*(5,43*3+6)+1,34-3";
-            entryCalcul.Text = "-5+3*4+2";
-            entryCalcul.Text = "5*6/3+4(-3*2+1)3+3*4";
-            */
-            entryCalcul.Text = "5,4543+3,454+(3,565*4,3+2,0034)*(5,43*3+6)+1,34-3";
+            bindingCalcul.History.Add("5+3+(3*4+2)*(5*3+6)+1-3");
+            bindingCalcul.History.Add("5*6/3+(3*2+1)+3*4+(5*6+(6/9)*5+5-(4+6+(4+5)))");
+            bindingCalcul.History.Add("5*6/3+(3*2+1)+3*4");
+            bindingCalcul.History.Add("5+3*4+2");
+            bindingCalcul.History.Add("5,4543+3,454+(3,565*4,3+2,0034)*(5,43*3+6)+1,34-3");
+            bindingCalcul.History.Add("-5+3*4+2");
+            bindingCalcul.History.Add("5*6/3+4(-3*2+1)3+3*4");
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
             
-            var str = entryCalcul.Text + button.Content;
+            var str = bindingCalcul.StrCalcul + button.Content;
             AddCharToCalculStr(str);
         }
        
         private void Erase_Button(object sender, RoutedEventArgs e)
         {
-            entryCalcul.Text = "";
+            bindingCalcul.StrCalcul = "";
         }
 
         private void Del_Button(object sender, RoutedEventArgs e)
         {
-            if (entryCalcul.Text.Length > 0) {
-                entryCalcul.Text = entryCalcul.Text.Substring(0, entryCalcul.Text.Length - 1);
+            if (bindingCalcul.StrCalcul.Length > 0) {
+                bindingCalcul.StrCalcul = bindingCalcul.StrCalcul.Substring(0, bindingCalcul.StrCalcul.Length - 1);
             }
         }
 
         private void Calcul_Click(object sender, RoutedEventArgs e)
         {
-            String str = entryCalcul.Text;
+            String str = bindingCalcul.StrCalcul;
 
             CalculStr(str);
         }
 
-
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
         {
-            var str = entryCalcul.Text;
+            var str = bindingCalcul.StrCalcul;
 
             switch (e.Key)
             {
                 case Key.Delete:
-                    entryCalcul.Text = "";
+                    bindingCalcul.StrCalcul = "";
                     break;
                 case Key.Enter:
                     CalculStr(str);
@@ -156,6 +156,16 @@ namespace Calculatrice
             }
         }
 
+        private void DoubleClickHistory_Event(object sender, RoutedEventArgs e)
+        {
+            ListBox list = (ListBox) sender;
+
+            if (list.SelectedItem != null)
+            {
+                bindingCalcul.StrCalcul = (String) list.SelectedItem;
+            }
+        }
+
         private void AddCharToCalculStr(String str)
         {
             str = replaceNegativeNumber(str);
@@ -163,7 +173,7 @@ namespace Calculatrice
             if (verifyString(str))
             {
                 str = str.Replace('N', '-');
-                entryCalcul.Text = str;
+                bindingCalcul.StrCalcul = str;
             }
         }
 
@@ -175,8 +185,9 @@ namespace Calculatrice
                 if (validParantheses(str))
                 {
                     str = replaceForgotOperande(str);
+                    bindingCalcul.History.Insert(0, str.Replace('N', '-'));
                     var op = buildOperationsTree(str);
-                    entryCalcul.Text = calcul(op).ToString();
+                    bindingCalcul.StrCalcul = calcul(op).ToString();
                 }
             }
         }

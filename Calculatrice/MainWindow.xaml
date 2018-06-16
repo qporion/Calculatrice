@@ -23,7 +23,7 @@
             <RowDefinition Height="350*" />
         </Grid.RowDefinitions>
 
-        <ListBox />
+        <ListBox ItemsSource="{Binding Path=History}" Background="LightGray" HorizontalContentAlignment="Right" MouseDoubleClick="DoubleClickHistory_Event"/>
         <GridSplitter 
             ResizeDirection="Rows"
             Width="Auto" 
@@ -31,7 +31,7 @@
             HorizontalAlignment="Stretch" 
             VerticalAlignment="Bottom" 
             Margin="0"/>
-            <TextBlock x:Name="entryCalcul" Grid.Row="1" Background="DimGray" TextWrapping="Wrap" TextAlignment="Center" FontWeight="Bold" FontSize="36" Foreground="White"></TextBlock>
+        <TextBlock Text="{Binding Path=StrCalcul}" Grid.Row="1" Background="DimGray" TextWrapping="Wrap" TextAlignment="Center" FontWeight="Bold" FontSize="36" Foreground="White"></TextBlock>
         <GridSplitter 
             Grid.Row="1"
             ResizeDirection="Rows"
