@@ -59,14 +59,14 @@ namespace Calculatrice.Service
 
                         sinCosTan += listStr.ElementAt(i);
 
-                        if (Char.Equals(listStr.ElementAtOrDefault(++i), ')'))
-                        {
-                            cptPrantheses.Pop();
-                        }
-
                         if (triggers.Contains(listStr.ElementAt(i)))
                         {
                             isRecursive = true;
+                        }
+
+                        if (Char.Equals(listStr.ElementAtOrDefault(++i), ')'))
+                        {
+                            cptPrantheses.Pop();
                         }
 
                             if (i >= listStr.Count)
