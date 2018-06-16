@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calculatrice"
         mc:Ignorable="d"
-        Title="Calculatrice" Height="733" Width="443" HorizontalAlignment="Center" VerticalAlignment="Center">
+        Title="Calculatrice" Height="733" Width="443" HorizontalAlignment="Center" VerticalAlignment="Center"
+        PreviewKeyDown="OnKeyDownHandler">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -15,10 +16,10 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    
 
 
-    <Grid Margin="0" Background="Gray" KeyDown="OnKeyDownHandler">
+
+    <Grid Margin="0" Background="Gray">
         <Grid.RowDefinitions>
             <RowDefinition Height="201*" />
             <RowDefinition Height="51*" />

@@ -68,6 +68,8 @@ namespace Calculatrice
             {
                 CalculStr(str);
             }
+
+            SetFocus();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -83,24 +85,28 @@ namespace Calculatrice
             }
             
             AddCharToCalculStr(str);
+            SetFocus();
         }
        
         private void Erase_Button(object sender, RoutedEventArgs e)
         {
             bindingCalcul.StrCalcul = "";
+            SetFocus();
         }
 
         private void Del_Button(object sender, RoutedEventArgs e)
         {
             if (bindingCalcul.StrCalcul.Length > 0) {
-                bindingCalcul.StrCalcul = bindingCalcul.StrCalcul.Substring(0, bindingCalcul.StrCalcul.Length - 1);
+                bindingCalcul.StrCalcul = removeLastCharacter(bindingCalcul.StrCalcul);
             }
+            SetFocus();
         }
 
         private void ClearHistory_Button(object sender, RoutedEventArgs e)
         {
             bindingCalcul.StrCalcul = "";
             bindingCalcul.History.Clear();
+            SetFocus();
         }
 
         private void Calcul_Click(object sender, RoutedEventArgs e)
@@ -108,6 +114,7 @@ namespace Calculatrice
             String str = bindingCalcul.StrCalcul;
 
             CalculStr(str);
+            SetFocus();
         }
 
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
@@ -119,14 +126,20 @@ namespace Calculatrice
                 case Key.Delete:
                     bindingCalcul.StrCalcul = "";
                     break;
+                case Key.Back:
+                    if (bindingCalcul.StrCalcul.Length > 0)
+                    {
+                        bindingCalcul.StrCalcul = removeLastCharacter(bindingCalcul.StrCalcul);
+                    }
+                    break;
                 case Key.Enter:
                     CalculStr(str);
                     break;
-                case Key.OemPlus:
+                case Key.Add:
                     str += "+";
                     AddCharToCalculStr(str);
                     break;
-                case Key.OemMinus:
+                case Key.Subtract:
                     str += "-";
                     AddCharToCalculStr(str);
                     break;
@@ -140,6 +153,14 @@ namespace Calculatrice
                     break;
                 case Key.OemComma:
                     str += ",";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.Oem4:
+                    str += ")";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.Oem3:
+                    str += "%";
                     AddCharToCalculStr(str);
                     break;
                 case Key.NumPad1:
@@ -164,12 +185,27 @@ namespace Calculatrice
                     break;
                 case Key.NumPad5:
                 case Key.D5:
-                    str += "5";
+                    if (Keyboard.Modifiers == ModifierKeys.Shift || Key.NumPad5 == e.Key)
+                    {
+                        str += "5";
+                    }
+                    else
+                    {
+                        str += "(";
+                    }
+                    
                     AddCharToCalculStr(str);
                     break;
                 case Key.NumPad6:
                 case Key.D6:
-                    str += "6";
+                    if (Keyboard.Modifiers == ModifierKeys.Shift || Key.NumPad6 == e.Key)
+                    {
+                        str += "6";
+                    }
+                    else
+                    {
+                        str += "-";
+                    }
                     AddCharToCalculStr(str);
                     break;
                 case Key.NumPad7:
@@ -187,7 +223,43 @@ namespace Calculatrice
                     str += "9";
                     AddCharToCalculStr(str);
                     break;
+
+                case Key.S:
+                    str += "s";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.I:
+                    str += "in(";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.Q:
+                    str += "qrt(";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.T:
+                    str += "tan(";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.C:
+                    str += "cos(";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.A:
+                    str += "abs(";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.E:
+                    str += "exp(";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.L:
+                    str += "log(";
+                    AddCharToCalculStr(str);
+                    break;
+
             }
+
+            SetFocus();
         }
 
         private void DoubleClickHistory_Event(object sender, RoutedEventArgs e)
@@ -198,6 +270,22 @@ namespace Calculatrice
             {
                 bindingCalcul.StrCalcul = (String) list.SelectedItem;
             }
+        }
+
+        private String removeLastCharacter(String str)
+        {
+            int idxEnd = 0;
+            for (int i=str.Length-2; i>=0; i--)
+            {
+                if (Char.IsNumber(str.ElementAt(i)) || this.listPattern.Contains(str.ElementAt(i)) || Char.Equals(str.ElementAt(i), '(')
+                    || Char.Equals(str.ElementAt(i), ')'))
+                {
+                    idxEnd = i+1;
+                    break; 
+                }
+            }
+
+            return str.Substring(0, idxEnd);
         }
 
         private void AddCharToCalculStr(String str)
@@ -234,16 +322,25 @@ namespace Calculatrice
         private void CalculStr(String str)
         {
             str = Service.Calculateur.replaceNegativeNumber(str);
-            if (verifyString(str))
+
+            if (str.Length > 0)
             {
-                if (validParantheses(str))
+                if (verifyString(str))
                 {
-                    str = Service.Calculateur.replaceForgotOperande(str);
-                    bindingCalcul.History.Insert(0, str.Replace('N', '-'));
-                    str = Service.Calculateur.replaceSinCosTan(str);
-                    Operation op = Service.Calculateur.buildOperationsTree(str);
-                    bindingCalcul.StrCalcul = Service.Calculateur.calcul(op).ToString();
+                    if (validParantheses(str))
+                    {
+                        str = Service.Calculateur.replaceForgotOperande(str);
+                        bindingCalcul.History.Insert(0, str.Replace('N', '-'));
+                        str = Service.Calculateur.replaceSinCosTan(str);
+                        Operation op = Service.Calculateur.buildOperationsTree(str);
+                        bindingCalcul.StrCalcul = Service.Calculateur.calcul(op).ToString();
+                    }
                 }
+            }
+            else
+            {
+                bindingCalcul.AffErreur = true;
+                bindingCalcul.Erreur = "Chaine vide";
             }
         }
 
@@ -331,6 +428,12 @@ namespace Calculatrice
             }
 
             return stack.Count == 0;
+        }
+
+        private void SetFocus()
+        {
+            this.Focusable = true;
+            Keyboard.Focus(this);
         }
     }
 }
