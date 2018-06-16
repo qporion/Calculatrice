@@ -27,19 +27,28 @@ namespace Calculatrice.Service
             return strReturn;
         }
 
-        public static String replaceSinCos(String str)
+        public static String replaceSinCosTan(String str)
         {
             List<char> listStr = str.ToList();
             String strResult = "";
 
+            List<char> triggers = new List<char>();
+            triggers.Add('s');
+            triggers.Add('c');
+            triggers.Add('t');
+            triggers.Add('e');
+            triggers.Add('l');
+            triggers.Add('a');
+
             int i = 0;
             while ( i < listStr.Count)
             {
-                if(Char.Equals(listStr.ElementAt(i), 's') || Char.Equals(listStr.ElementAt(i), 'c'))
+                if(triggers.Contains(listStr.ElementAt(i)))
                 {
                     int idxStart = i;
-                    String sinCos = "";
+                    String sinCosTan = "";
                     Stack<char> cptPrantheses = new Stack<char>();
+                    bool isRecursive = false;
 
                     while (!(Char.Equals(listStr.ElementAt(i), ')') && cptPrantheses.Count == 0))
                     {
@@ -48,36 +57,70 @@ namespace Calculatrice.Service
                             cptPrantheses.Push('(');
                         }
 
-                        sinCos += listStr.ElementAt(i);
+                        sinCosTan += listStr.ElementAt(i);
 
                         if (Char.Equals(listStr.ElementAtOrDefault(++i), ')'))
                         {
                             cptPrantheses.Pop();
                         }
 
-                        if (i >= listStr.Count)
+                        if (triggers.Contains(listStr.ElementAt(i)))
+                        {
+                            isRecursive = true;
+                        }
+
+                            if (i >= listStr.Count)
                         {
                             break;
                         } 
                     }
 
-                    
-                    sinCos = sinCos.Substring(4, sinCos.Length-4);
-                    sinCos = replaceNegativeNumber(sinCos);
+                    int lengthStart = 4;
+                    if (sinCosTan.Contains("sqrt"))
+                        lengthStart = 5;
 
-                    sinCos = replaceForgotOperande(sinCos);
-                    Operation op = buildOperationsTree(sinCos);
+                    sinCosTan = sinCosTan.Substring(lengthStart, sinCosTan.Length - lengthStart);
+
+                    if(isRecursive)
+                    {
+                        sinCosTan = replaceSinCosTan(sinCosTan);
+                    }
+
+
+                    sinCosTan = replaceNegativeNumber(sinCosTan);
+
+                    sinCosTan = replaceForgotOperande(sinCosTan);
+                    Operation op = buildOperationsTree(sinCosTan);
                     double value = calcul(op);
 
-                    if (Char.Equals(listStr.ElementAt(idxStart), 's'))
-                    {
-                        value = Math.Sin(value);
+                    switch(listStr.ElementAt(idxStart)) {
+                        case 's':
+                            switch(listStr.ElementAt(idxStart+1))
+                            {
+                                case 'i':
+                                    value = Math.Sin(value);
+                                    break;
+                                case 'q':
+                                    value = Math.Sqrt(value);
+                                    break;
+                            }
+                            break;
+                        case 'c':
+                            value = Math.Cos(value);
+                            break;
+                        case 't':
+                            value = Math.Tan(value);
+                            break;
+                        case 'e':
+                            value = Math.Exp(value);
+                            break;
+                        case 'l':
+                            value = Math.Log(value);
+                            break;
+                        case 'a':
+                            value = Math.Abs(value);
+                            break;
                     }
-                    else
-                    {
-                        value = Math.Cos(value);
-                    }
-                    listStr.GetType();
                     strResult += value;
                 }
                 else
@@ -88,7 +131,6 @@ namespace Calculatrice.Service
                 
                 i++;
             }
-            str.GetType();
             strResult = replaceNegativeNumber(strResult);
             return strResult;
         }
@@ -310,8 +352,24 @@ namespace Calculatrice.Service
 
                 if (Char.Equals('N', str.ElementAt(0)))
                 {
-                    str = str.Replace('N', '-');
+                    int cptN = 0;
+                    int idx = 0;
+
+                    while(idx < str.Length)
+                    {
+                        if (Char.Equals('N', str.ElementAt(idx++)))
+                            cptN++;
+                        else
+                            break;
+                    }
+
+                    if (cptN % 2 == 0)
+                        str = str.Substring(cptN);
+                    else
+                        str = '-' + str.Substring(cptN);
+                    
                 }
+
                 op.value = Convert.ToDouble(str);
             }
 

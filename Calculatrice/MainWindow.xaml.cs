@@ -56,6 +56,13 @@ namespace Calculatrice
             testsNonRegression.Add("9+sin(6+30)*9");
             testsNonRegression.Add("5*6/3+(3*2+1)+3*4+sin(5*6+(6/9)*5+5-(4+6+(4+5)))");
             testsNonRegression.Add("5,4543+3,454+(3,565*4,3+2,0034)*cos(5,43*3+6)+1,34-3");
+            testsNonRegression.Add("9+-sin(6+30)*9");
+            testsNonRegression.Add("9+tan(60+3)*9");
+            testsNonRegression.Add("9+exp(6+3)*9");
+            testsNonRegression.Add("9+log(60+3)*9");
+            testsNonRegression.Add("sqrt(4)");
+            testsNonRegression.Add("sin(cos(tan(exp(log(8)))))");
+            testsNonRegression.Add("abs(-4)");
 
             foreach (String str in testsNonRegression)
             {
@@ -69,7 +76,8 @@ namespace Calculatrice
 
             String str = bindingCalcul.StrCalcul + button.Content;
 
-            if (button.Content.Equals("sin") || button.Content.Equals("cos"))
+            if (button.Content.Equals("sin") || button.Content.Equals("cos") || button.Content.Equals("tan") || button.Content.Equals("exp")
+                || button.Content.Equals("log") || button.Content.Equals("sqrt") || button.Content.Equals("abs"))
             {
                 str += "(";
             }
@@ -232,7 +240,7 @@ namespace Calculatrice
                 {
                     str = Service.Calculateur.replaceForgotOperande(str);
                     bindingCalcul.History.Insert(0, str.Replace('N', '-'));
-                    str = Service.Calculateur.replaceSinCos(str);
+                    str = Service.Calculateur.replaceSinCosTan(str);
                     Operation op = Service.Calculateur.buildOperationsTree(str);
                     bindingCalcul.StrCalcul = Service.Calculateur.calcul(op).ToString();
                 }
