@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Calculatrice.Properties
+namespace Calculateur.Properties
 {
 
 
