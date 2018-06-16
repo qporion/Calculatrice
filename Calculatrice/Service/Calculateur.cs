@@ -27,6 +27,72 @@ namespace Calculatrice.Service
             return strReturn;
         }
 
+        public static String replaceSinCos(String str)
+        {
+            List<char> listStr = str.ToList();
+            String strResult = "";
+
+            int i = 0;
+            while ( i < listStr.Count)
+            {
+                if(Char.Equals(listStr.ElementAt(i), 's') || Char.Equals(listStr.ElementAt(i), 'c'))
+                {
+                    int idxStart = i;
+                    String sinCos = "";
+                    Stack<char> cptPrantheses = new Stack<char>();
+
+                    while (!(Char.Equals(listStr.ElementAt(i), ')') && cptPrantheses.Count == 0))
+                    {
+                        if (Char.Equals(listStr.ElementAt(i), '('))
+                        {
+                            cptPrantheses.Push('(');
+                        }
+
+                        sinCos += listStr.ElementAt(i);
+
+                        if (Char.Equals(listStr.ElementAtOrDefault(++i), ')'))
+                        {
+                            cptPrantheses.Pop();
+                        }
+
+                        if (i >= listStr.Count)
+                        {
+                            break;
+                        } 
+                    }
+
+                    
+                    sinCos = sinCos.Substring(4, sinCos.Length-4);
+                    sinCos = replaceNegativeNumber(sinCos);
+
+                    sinCos = replaceForgotOperande(sinCos);
+                    Operation op = buildOperationsTree(sinCos);
+                    double value = calcul(op);
+
+                    if (Char.Equals(listStr.ElementAt(idxStart), 's'))
+                    {
+                        value = Math.Sin(value);
+                    }
+                    else
+                    {
+                        value = Math.Cos(value);
+                    }
+                    listStr.GetType();
+                    strResult += value;
+                }
+                else
+                { 
+                    strResult += listStr.ElementAt(i);
+                } 
+
+                
+                i++;
+            }
+            str.GetType();
+            strResult = replaceNegativeNumber(strResult);
+            return strResult;
+        }
+
         public static String replaceForgotOperande(String str)
         {
             var returnStr = "";
@@ -134,8 +200,7 @@ namespace Calculatrice.Service
 
                     if (idxEnd == 0)
                     {
-                        idxEnd = 1;
-                        op.valueRight = buildOperationsTree(strAfterParantheses.Substring(idxStart, idxEnd - (idxStart * 2)));
+                        op.valueRight = buildOperationsTree(strAfterParantheses.Substring(idxStart));
                         return op;
                     }
                     op.valueRight = buildOperationsTree(strAfterParantheses.Substring(idxStart, idxEnd - (idxStart * 2)));

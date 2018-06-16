@@ -50,8 +50,14 @@ namespace Calculatrice
             testsNonRegression.Add("-5+3*4+2");
             testsNonRegression.Add("5*6/3+4(-3*2+1)3+3*4");
             testsNonRegression.Add("9+(6+3)*9");
+            testsNonRegression.Add("cos(60)+3");
+            testsNonRegression.Add("9+sin(30)");
+            testsNonRegression.Add("9+cos(60+3)*9");
+            testsNonRegression.Add("9+sin(6+30)*9");
+            testsNonRegression.Add("5*6/3+(3*2+1)+3*4+sin(5*6+(6/9)*5+5-(4+6+(4+5)))");
+            testsNonRegression.Add("5,4543+3,454+(3,565*4,3+2,0034)*cos(5,43*3+6)+1,34-3");
 
-            foreach(String str in testsNonRegression)
+            foreach (String str in testsNonRegression)
             {
                 CalculStr(str);
             }
@@ -59,9 +65,15 @@ namespace Calculatrice
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var button = sender as Button;
+            Button button = sender as Button;
+
+            String str = bindingCalcul.StrCalcul + button.Content;
+
+            if (button.Content.Equals("sin") || button.Content.Equals("cos"))
+            {
+                str += "(";
+            }
             
-            var str = bindingCalcul.StrCalcul + button.Content;
             AddCharToCalculStr(str);
         }
        
@@ -183,8 +195,26 @@ namespace Calculatrice
         private void AddCharToCalculStr(String str)
         {
             str = Service.Calculateur.replaceNegativeNumber(str);
+            int cptParantheses = 0;
 
-            if (verifyString(str))
+            for (int i=0; i<str.Length; i++)
+            {
+                if (Char.Equals(str.ElementAt(i), '('))
+                {
+                    cptParantheses++;
+                }
+                if (Char.Equals(str.ElementAtOrDefault(i), ')'))
+                {
+                    cptParantheses--;
+                }
+
+                if (cptParantheses < 0)
+                {
+                    break;
+                }
+            }
+
+            if (verifyString(str) && cptParantheses >= 0) 
             {
                 str = str.Replace('N', '-');
                 bindingCalcul.StrCalcul = str;
@@ -200,7 +230,8 @@ namespace Calculatrice
                 {
                     str = Service.Calculateur.replaceForgotOperande(str);
                     bindingCalcul.History.Insert(0, str.Replace('N', '-'));
-                    var op = Service.Calculateur.buildOperationsTree(str);
+                    str = Service.Calculateur.replaceSinCos(str);
+                    Operation op = Service.Calculateur.buildOperationsTree(str);
                     bindingCalcul.StrCalcul = Service.Calculateur.calcul(op).ToString();
                 }
             }
@@ -268,6 +299,11 @@ namespace Calculatrice
 
                 if (Char.Equals(str.ElementAt(i), ')'))
                 {
+                    if (Char.Equals(str.ElementAt(i-1), '('))
+                    {
+                        return false;
+                    }
+
                     if (stack.Count == 0)
                     {
                         return false;

@@ -28,3 +28,4 @@ D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\
 D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\Calculatrice.csproj.CoreCompileInputs.cache
 D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\Calculatrice.exe
 D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\Calculatrice.pdb
+D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\Calculatrice.csprojAssemblyReference.cache
