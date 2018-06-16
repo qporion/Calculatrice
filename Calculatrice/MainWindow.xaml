@@ -5,33 +5,80 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calculatrice"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid HorizontalAlignment="Left" Width="515" Margin="0,10,0,0" Height="310" VerticalAlignment="Top">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30*"/>
-            <RowDefinition Height="20*"/>
-            <RowDefinition Height="50*"/>
-        </Grid.RowDefinitions>
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" ShowGridLines="True" Height="334" RenderTransformOrigin="0.5,0.5" Width="513" Grid.RowSpan="3">
-        </Grid>
-        <TextBox x:Name="entryCalcul" HorizontalAlignment="Left" Height="88" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="514" KeyDown="OnKeyDownHandler"/>
-        <Grid HorizontalAlignment="Left" Grid.Row="2" Height="155" VerticalAlignment="Top" Width="515">
-            <Button Content="7" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-            <Button Content="8" HorizontalAlignment="Left" Margin="90,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-            <Button Content="9" HorizontalAlignment="Left" Margin="170,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-            <Button Content="4" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-            <Button Content="5" HorizontalAlignment="Left" Margin="90,37,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-            <Button Content="6" HorizontalAlignment="Left" Margin="170,37,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-            <Button Content="1" HorizontalAlignment="Left" Margin="10,64,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-            <Button Content="2" HorizontalAlignment="Left" Margin="90,64,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-            <Button Content="3" HorizontalAlignment="Left" Margin="170,64,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-            <Button Content="0" HorizontalAlignment="Left" Margin="10,91,0,0" VerticalAlignment="Top" Width="155" Click="Button_Click"/>
-            <Button Content="," HorizontalAlignment="Left" Margin="170,91,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-            <Button Content="/" HorizontalAlignment="Left" Margin="250,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-            <Button Content="*" HorizontalAlignment="Left" Margin="250,37,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-            <Button Content="-" HorizontalAlignment="Left" Margin="250,64,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-            <Button Content="+" HorizontalAlignment="Left" Margin="250,91,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        </Grid>
+        Title="Calculatrice" Height="633" Width="443" HorizontalAlignment="Center" VerticalAlignment="Center">
 
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Ressources/Buttons.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    
+    <Grid Margin="0" Background="Gray" KeyDown="OnKeyDownHandler">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="201*" />
+            <RowDefinition Height="51*" />
+            <RowDefinition Height="350*" />
+        </Grid.RowDefinitions>
+
+        <ListBox />
+        <GridSplitter 
+            ResizeDirection="Rows"
+            Width="Auto" 
+            Height="3"
+            HorizontalAlignment="Stretch" 
+            VerticalAlignment="Bottom" 
+            Margin="0"/>
+            <TextBlock x:Name="entryCalcul" Grid.Row="1" Background="DimGray" TextWrapping="Wrap" TextAlignment="Center" FontWeight="Bold" FontSize="36" Foreground="White"></TextBlock>
+        <GridSplitter 
+            Grid.Row="1"
+            ResizeDirection="Rows"
+            Width="Auto" 
+            Height="3"
+            HorizontalAlignment="Stretch" 
+            VerticalAlignment="Bottom" 
+            Margin="0"/>
+        <Grid  Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+
+
+            <Button Content="C" Style="{StaticResource OrangeButton}" Click="Erase_Button"/>
+            <Button Content="7" Grid.Row="1" Style="{StaticResource GrayButton}" Click="Button_Click"/>
+            <Button Content="4" Grid.Row="2" Style="{StaticResource GrayButton}" Click="Button_Click"/>
+            <Button Content="1" Grid.Row="3" Style="{StaticResource GrayButton}" Click="Button_Click"/>
+            <Button Content="0" Grid.Row="4" Grid.ColumnSpan="2" Style="{StaticResource GrayButton}" Click="Button_Click"/>
+            <Button Content="←" Grid.Column="1" Style="{StaticResource OrangeButton}" FontSize="24" Click="Del_Button"/>
+            <Button Content="%" Grid.Column="2" Style="{StaticResource OrangeButton}" Click="Button_Click"/>
+            <Button Content="/" Grid.Column="3" Style="{StaticResource OrangeButton}" Click="Button_Click"/>
+            <Button Content="8" Grid.Row="1" Grid.Column="1" Style="{StaticResource GrayButton}" Click="Button_Click"/>
+            <Button Content="9" Grid.Row="1" Grid.Column="2" Style="{StaticResource GrayButton}" Click="Button_Click"/>
+            <Button Content="*" Grid.Row="1" Grid.Column="3" Style="{StaticResource OrangeButton}" Click="Button_Click"/>
+            <Button Content="5" Grid.Row="2" Grid.Column="1" Style="{StaticResource GrayButton}" Click="Button_Click"/>
+            <Button Content="6" Grid.Row="2" Grid.Column="2" Style="{StaticResource GrayButton}" Click="Button_Click"/>
+            <Button Content="+" Grid.Row="2" Grid.Column="3" Style="{StaticResource OrangeButton}" Click="Button_Click"/>
+            <Button Content="2" Grid.Row="3" Grid.Column="1" Style="{StaticResource GrayButton}" Click="Button_Click"/>
+            <Button Content="3" Grid.Row="3" Grid.Column="2" Style="{StaticResource GrayButton}" Click="Button_Click"/>
+            <Button Content="-" Grid.Row="3" Grid.Column="3" Style="{StaticResource OrangeButton}" Click="Button_Click"/>
+            <Button Content="," Grid.Row="4" Grid.Column="2" Style="{StaticResource GrayButton}" Click="Button_Click"/>
+            <Button Content="=" Grid.Row="4" Grid.Column="3" Style="{StaticResource OrangeButton}" Click="Calcul_Click"/>
+
+
+        </Grid>
+        
     </Grid>
+
 </Window>

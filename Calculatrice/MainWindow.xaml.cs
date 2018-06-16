@@ -37,43 +37,148 @@ namespace Calculatrice
             listPattern.Add('*');
             listPattern.Add('%');
 
-            entryCalcul.Text = "5+3+(3*4+2)*(5*3+6)+1-3";
+            /*entryCalcul.Text = "5+3+(3*4+2)*(5*3+6)+1-3";
             entryCalcul.Text = "5*6/3+(3*2+1)+3*4+(5*6+(6/9)*5+5-(4+6+(4+5)))";
             entryCalcul.Text = "5*6/3+(3*2+1)+3*4";
             entryCalcul.Text = "5+3*4+2";
             entryCalcul.Text = "5,4543+3,454+(3,565*4,3+2,0034)*(5,43*3+6)+1,34-3";
-            entryCalcul.Text = "5*6/3+4(3*2+1)3+3*4";
+            entryCalcul.Text = "-5+3*4+2";
+            entryCalcul.Text = "5*6/3+4(-3*2+1)3+3*4";
+            */
+            entryCalcul.Text = "5,4543+3,454+(3,565*4,3+2,0034)*(5,43*3+6)+1,34-3";
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-
+            
             var str = entryCalcul.Text + button.Content;
+            AddCharToCalculStr(str);
+        }
+       
+        private void Erase_Button(object sender, RoutedEventArgs e)
+        {
+            entryCalcul.Text = "";
+        }
 
-            if(verifyString(str))
-            {
-                entryCalcul.Text += button.Content;
+        private void Del_Button(object sender, RoutedEventArgs e)
+        {
+            if (entryCalcul.Text.Length > 0) {
+                entryCalcul.Text = entryCalcul.Text.Substring(0, entryCalcul.Text.Length - 1);
             }
         }
 
+        private void Calcul_Click(object sender, RoutedEventArgs e)
+        {
+            String str = entryCalcul.Text;
+
+            CalculStr(str);
+        }
+
+
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
         {
+            var str = entryCalcul.Text;
+
             switch (e.Key)
             {
                 case Key.Delete:
                     entryCalcul.Text = "";
                     break;
                 case Key.Enter:
-                    var str = entryCalcul.Text;
-                    if (validParantheses(str))
-                    {
-                        str = replaceForgotOperande(str);
-                        var op = buildOperationsTree(str);
-                        entryCalcul.Text = calcul(op).ToString();
-                    }
+                    CalculStr(str);
                     break;
-            } 
+                case Key.OemPlus:
+                    str += "+";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.OemMinus:
+                    str += "-";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.Divide:
+                    str += "/";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.Multiply:
+                    str += "*";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.OemComma:
+                    str += ",";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.NumPad1:
+                case Key.D1:
+                    str += "1";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.NumPad2:
+                case Key.D2:
+                    str += "2";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.NumPad3:
+                case Key.D3:
+                    str += "3";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.NumPad4:
+                case Key.D4:
+                    str += "4";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.NumPad5:
+                case Key.D5:
+                    str += "5";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.NumPad6:
+                case Key.D6:
+                    str += "6";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.NumPad7:
+                case Key.D7:
+                    str += "7";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.NumPad8:
+                case Key.D8:
+                    str += "8";
+                    AddCharToCalculStr(str);
+                    break;
+                case Key.NumPad9:
+                case Key.D9:
+                    str += "9";
+                    AddCharToCalculStr(str);
+                    break;
+            }
+        }
+
+        private void AddCharToCalculStr(String str)
+        {
+            str = replaceNegativeNumber(str);
+
+            if (verifyString(str))
+            {
+                str = str.Replace('N', '-');
+                entryCalcul.Text = str;
+            }
+        }
+
+        private void CalculStr(String str)
+        {
+            str = replaceNegativeNumber(str);
+            if (verifyString(str))
+            {
+                if (validParantheses(str))
+                {
+                    str = replaceForgotOperande(str);
+                    var op = buildOperationsTree(str);
+                    entryCalcul.Text = calcul(op).ToString();
+                }
+            }
         }
 
         private bool verifyString(String str)
@@ -115,7 +220,7 @@ namespace Calculatrice
             {
                 if (this.listPattern.Contains(str.ElementAt(i)))
                 {
-                    if (!Char.IsDigit(str.ElementAtOrDefault(i - 1)))
+                    if (!Char.IsDigit(str.ElementAtOrDefault(i - 1)) && !Char.Equals(str.ElementAtOrDefault(i-1), ')'))
                     {
                         return false;
                     }
@@ -149,10 +254,26 @@ namespace Calculatrice
             return stack.Count == 0;
         }
 
+        private String replaceNegativeNumber(String str)
+        {
+            String strReturn = "";
+            for (var i = 0; i < str.Length; i++)
+            {
+                if (Char.Equals(str.ElementAt(i), '-') && !Char.IsNumber(str.ElementAtOrDefault(i-1)) && !Char.Equals(str.ElementAtOrDefault(i - 1), ')'))
+                {
+                    strReturn += 'N';
+                } else
+                {
+                    strReturn += str.ElementAt(i);
+                }
+            }
+
+            return strReturn;
+        }
+
         private String replaceForgotOperande(String str)
         {
             var returnStr = "";
-            var lastIdx = 0;
 
             for(var i=0; i<str.Length; i++)
             {
@@ -352,6 +473,10 @@ namespace Calculatrice
                     }
                 }
 
+                if ( Char.Equals('N' , str.ElementAt(0)))
+                {
+                    str = str.Replace('N', '-');
+                }
                 op.value = Convert.ToDouble(str);
             }
 
