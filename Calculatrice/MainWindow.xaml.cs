@@ -194,6 +194,8 @@ namespace Calculatrice
 
         private void AddCharToCalculStr(String str)
         {
+            bindingCalcul.AffErreur = false;
+
             str = Service.Calculateur.replaceNegativeNumber(str);
             int cptParantheses = 0;
 
@@ -257,6 +259,8 @@ namespace Calculatrice
 
                     if(cptComma > 1 || !Char.IsDigit(str.ElementAtOrDefault(i-1)))
                     {
+                        bindingCalcul.AffErreur = true;
+                        bindingCalcul.Erreur = "Virgule invalide";
                         return false;
                     }
                 }
@@ -278,6 +282,8 @@ namespace Calculatrice
                 {
                     if (!Char.IsDigit(str.ElementAtOrDefault(i - 1)) && !Char.Equals(str.ElementAtOrDefault(i-1), ')'))
                     {
+                        bindingCalcul.AffErreur = true;
+                        bindingCalcul.Erreur = "Opérande invalide";
                         return false;
                     }
                 }
@@ -301,11 +307,15 @@ namespace Calculatrice
                 {
                     if (Char.Equals(str.ElementAt(i-1), '('))
                     {
+                        bindingCalcul.AffErreur = true;
+                        bindingCalcul.Erreur = "Parenthèses vide";
                         return false;
                     }
 
                     if (stack.Count == 0)
                     {
+                        bindingCalcul.AffErreur = true;
+                        bindingCalcul.Erreur = "Pas assez de parenthèses ouvrantes";
                         return false;
                     }
                     stack.Pop();

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calculatrice"
         mc:Ignorable="d"
-        Title="Calculatrice" Height="633" Width="443" HorizontalAlignment="Center" VerticalAlignment="Center">
+        Title="Calculatrice" Height="733" Width="443" HorizontalAlignment="Center" VerticalAlignment="Center">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -14,13 +14,15 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-
     
+
+
     <Grid Margin="0" Background="Gray" KeyDown="OnKeyDownHandler">
         <Grid.RowDefinitions>
             <RowDefinition Height="201*" />
             <RowDefinition Height="51*" />
             <RowDefinition Height="350*" />
+            <RowDefinition Height="50*" />
         </Grid.RowDefinitions>
 
         <ListBox ItemsSource="{Binding Path=History}" Background="LightGray" HorizontalContentAlignment="Right" MouseDoubleClick="DoubleClickHistory_Event"/>
@@ -83,7 +85,7 @@
             <Button Content="" Grid.Column="4" Style="{StaticResource FillerButton}"/>
             <Button Content="" Grid.Column="5" Style="{StaticResource FillerButton}" />
             <Button Content="" Grid.Row="1" Grid.Column="5" Style="{StaticResource FillerButton}"/>
-            
+
             <Button Content="sin" Grid.Row="3" Grid.Column="4" Style="{StaticResource OrangeButton}" Click="Button_Click"/>
             <Button Content="cos" Grid.Row="4" Grid.Column="4" Style="{StaticResource OrangeButton}" Click="Button_Click"/>
 
@@ -93,7 +95,33 @@
             <Button Content="=" Grid.RowSpan="2" Grid.Row="3" Grid.Column="5" Style="{StaticResource OrangeButton}" Click="Calcul_Click" Background="Chocolate"/>
 
         </Grid>
-        
+        <TextBlock Grid.Row="3" Background="LightGray" Foreground="Red" Text="{Binding Path=Erreur}" TextWrapping="Wrap" TextAlignment="Center" FontWeight="Bold" FontSize="36" Opacity="0">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding AffErreur}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                             From="0.0" To="1.0" Duration="0:0:0.5"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                             From="1.0" To="0.0" Duration="0:0:0.5"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
     </Grid>
 
 </Window>
