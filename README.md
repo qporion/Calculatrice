@@ -12,5 +12,4 @@
 ## Backend
 
 * Calcul effectué avec une liste avec deux chaines (valeur de droite et de gauche)
-* Gestion des espaces pour les milliers, des virgules, des parenthèses, de l'infini, sinus, cosinus
-...tangente, valeur absolue, exponentielle, logarithme népérien, modulo, racine carrée.
+* Gestion des espaces pour les milliers, des virgules, des parenthèses, de l'infini, sinus, cosinus, tangente, valeur absolue, exponentielle, logarithme népérien, modulo, racine carrée.
