@@ -498,6 +498,41 @@ namespace Calculatrice
                         bindingCalcul.StrCalcul += Clipboard.GetText();
                     break;
 
+                case Key.Z:
+                    if (Keyboard.Modifiers == ModifierKeys.Shift)
+                    {
+                        Border border = (Border)this.GetVisualChild(0);
+                        AdornerDecorator rnd = (AdornerDecorator)border.Child;
+                        ContentPresenter content = (ContentPresenter)rnd.Child;
+                        DockPanel dock = (DockPanel) content.Content;
+                        Grid grid = (Grid)dock.Children[1];
+
+                        foreach(FrameworkElement element in grid.Children)
+                        {
+                            if (element is ListBox)
+                            {
+                                Grid.SetColumn(element, 0);
+                                Grid.SetRow(element, 0);
+                                Grid.SetColumnSpan(element, 2);
+                                Grid.SetRowSpan(element, 1);
+                            }
+                            else if (element is Viewbox && Grid.GetRow(element) < 3)
+                            {
+                                Grid.SetColumn(element, 0);
+                                Grid.SetRow(element, 1);
+                                Grid.SetColumnSpan(element, 2);
+                                Grid.SetRowSpan(element, 1);
+                            }
+                            else if (element is Grid)
+                            {
+                                Grid.SetColumn(element, 0);
+                                Grid.SetRow(element, 2);
+                                Grid.SetColumnSpan(element, 2);
+                                Grid.SetRowSpan(element, 1);
+                            }
+                        }
+                    }
+                    break;
             }
 
             SetFocus();

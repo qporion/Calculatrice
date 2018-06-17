@@ -8,6 +8,8 @@
 * Supprimer tout l'historique avec le bouton `CE`
 * Réagencement des items avec le drag and drop
 * Double click sur un élément de l'historique pour le reprendre
+* Gestion Radian et degrées avec le switch
+* Reset de l'interface avec `Shift+Z`
 
 ## Backend
 
