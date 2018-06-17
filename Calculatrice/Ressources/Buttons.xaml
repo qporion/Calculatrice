@@ -104,4 +104,24 @@
         </Setter>
     </Style>
 
+    <Style x:Key="ToolbarButton" TargetType="Button">
+        <Setter Property="Margin" Value="2"></Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Border" BorderThickness="1" Background="White" BorderBrush="DimGray">
+                        <ContentPresenter Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="Border" Property="Background" Value="DimGray" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="LightGray" />
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
 </ResourceDictionary>

@@ -38,6 +38,7 @@ namespace UnitTestProject1
             testsNonRegression.Add("(3*4+2)*cos(5*3+6)+1", "-6,66820964313975");
             testsNonRegression.Add("log(0)*log(0)", "∞");
             testsNonRegression.Add("9/0", "NaN");
+            testsNonRegression.Add("9sin(9)", "3,70906636717581");
 
             foreach (KeyValuePair<String, String> row in testsNonRegression)
             {
@@ -85,11 +86,11 @@ namespace UnitTestProject1
         [TestMethod]
         public void TestReplaceSinCosTan()
         {
-            String str = Calculatrice.Service.Calculateur.replaceSinCosTan("sin(cos(tan(exp(log(8)))))");
+            String str = Calculatrice.Service.Calculateur.replaceSinCosTan("sin(cos(tan(exp(log(8)))))", false);
 
             Assert.AreEqual("0,764032254013142", str);
 
-            str = Calculatrice.Service.Calculateur.replaceSinCosTan("log(0)*log(0)");
+            str = Calculatrice.Service.Calculateur.replaceSinCosTan("log(0)*log(0)", false);
 
             Assert.AreEqual("N∞*N∞", str);
         }
@@ -99,7 +100,7 @@ namespace UnitTestProject1
             Calculatrice.Service.Calculateur.replaceNegativeNumber(strCalcul);
 
             strCalcul = Calculatrice.Service.Calculateur.replaceForgotOperande(strCalcul);
-            strCalcul = Calculatrice.Service.Calculateur.replaceSinCosTan(strCalcul);
+            strCalcul = Calculatrice.Service.Calculateur.replaceSinCosTan(strCalcul, false);
             strCalcul = Calculatrice.Service.Calculateur.replaceBigNumber(strCalcul);
             Calculatrice.Model.Operation op = Calculatrice.Service.Calculateur.buildOperationsTree(strCalcul);
 

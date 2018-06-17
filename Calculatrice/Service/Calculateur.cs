@@ -46,7 +46,7 @@ namespace Calculatrice.Service
             return strReturn;
         }
 
-        public static String replaceSinCosTan(String str)
+        public static String replaceSinCosTan(String str, bool isDeg)
         {
             List<char> listStr = str.ToList();
             String strResult = "";
@@ -102,7 +102,7 @@ namespace Calculatrice.Service
 
                     if (isRecursive)
                     {
-                        sinCosTan = replaceSinCosTan(sinCosTan);
+                        sinCosTan = replaceSinCosTan(sinCosTan, isDeg);
                     }
 
 
@@ -110,7 +110,17 @@ namespace Calculatrice.Service
 
                     sinCosTan = replaceForgotOperande(sinCosTan);
                     Operation op = buildOperationsTree(sinCosTan);
-                    double value = calcul(op);
+
+                    double value = 0;
+                    if (isDeg)
+                    {
+                        value = DegreeToRadian(calcul(op));
+                    }
+                    else
+                    {
+                        value = calcul(op);
+                    }
+                    
 
                     switch (listStr.ElementAt(idxStart))
                     {
@@ -118,7 +128,7 @@ namespace Calculatrice.Service
                             switch (listStr.ElementAt(idxStart + 1))
                             {
                                 case 'i':
-                                    value = Math.Sin(value);
+                                        value = Math.Sin(value);
                                     break;
                                 case 'q':
                                     value = Math.Sqrt(value);
@@ -155,13 +165,18 @@ namespace Calculatrice.Service
             return strResult;
         }
 
+        private static double DegreeToRadian(double angle)
+        {
+            return (Math.PI / 180) * angle;
+        }
+
         public static String replaceForgotOperande(String str)
         {
             var returnStr = "";
 
             for (var i = 0; i < str.Length; i++)
             {
-                if (Char.Equals(str.ElementAt(i), '(') && (Char.IsDigit(str.ElementAtOrDefault(i - 1)) || Char.Equals(str.ElementAtOrDefault(i - 1), ')')))
+                if ((Char.Equals(str.ElementAt(i), '(') || Char.IsLetter(str.ElementAt(i))) && (Char.IsDigit(str.ElementAtOrDefault(i - 1)) || Char.Equals(str.ElementAtOrDefault(i - 1), ')')))
                 {
                     returnStr += "*";
                 }

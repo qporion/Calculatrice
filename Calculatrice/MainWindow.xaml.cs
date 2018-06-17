@@ -19,9 +19,7 @@ using Calculatrice.Model;
 namespace Calculatrice
 {
     enum Operande { Moins = '-', Plus = '+', Multiplier = '*', Diviser = '/', Modulo = '%' };
-    /// <summary>
-    /// Logique d'interaction pour MainWindow.xaml
-    /// </summary>
+
     public partial class MainWindow : Window
     {
         public List<char> listPattern;
@@ -39,39 +37,6 @@ namespace Calculatrice
             listPattern.Add('/');
             listPattern.Add('*');
             listPattern.Add('%');
-
-            // List de tests @TODO rajouter des tests pour chaque bug rencontré ---->> Test unitaires now
-            /*List<String> testsNonRegression = new List<String>();
-            testsNonRegression.Add("5+3+(3*4+2)*(5*3+6)+1-3");
-            testsNonRegression.Add("5*6/3+(3*2+1)+3*4+(5*6+(6/9)*5+5-(4+6+(4+5)))");
-            testsNonRegression.Add("5*6/3+(3*2+1)+3*4");
-            testsNonRegression.Add("5+3*4+2");
-            testsNonRegression.Add("5,4543+3,454+(3,565*4,3+2,0034)*(5,43*3+6)+1,34-3");
-            testsNonRegression.Add("-5+3*4+2");
-            testsNonRegression.Add("5*6/3+4(-3*2+1)3+3*4");
-            testsNonRegression.Add("9+(6+3)*9");
-            testsNonRegression.Add("cos(60)+3");
-            testsNonRegression.Add("9+sin(30)");
-            testsNonRegression.Add("9+cos(60+3)*9");
-            testsNonRegression.Add("9+sin(6+30)*9");
-            testsNonRegression.Add("5*6/3+(3*2+1)+3*4+sin(5*6+(6/9)*5+5-(4+6+(4+5)))");
-            testsNonRegression.Add("5,4543+3,454+(3,565*4,3+2,0034)*cos(5,43*3+6)+1,34-3");
-            testsNonRegression.Add("9+-sin(6+30)*9");
-            testsNonRegression.Add("9+tan(60+3)*9");
-            testsNonRegression.Add("9+exp(6+3)*9");
-            testsNonRegression.Add("9+log(60+3)*9");
-            testsNonRegression.Add("sqrt(4)");
-            testsNonRegression.Add("sin(cos(tan(exp(log(8)))))");
-            testsNonRegression.Add("abs(-4)");
-            testsNonRegression.Add("4/-5+6");
-            testsNonRegression.Add("9+exp(60+3)*9");
-            testsNonRegression.Add("(3*4+2)*cos(5*3+6)+1");
-            testsNonRegression.Add("9+log(60+3)*9");
-
-            foreach (String str in testsNonRegression)
-            {
-                CalculStr(str);
-            }*/
 
             SetFocus();
         }
@@ -303,6 +268,25 @@ namespace Calculatrice
             return isColSpan;
         }
 
+        private void ToolBar_Button(object sender, RoutedEventArgs e)
+        {
+            Button btn = (Button) sender;
+            switch(btn.Content)
+            {
+                case "Cut":
+                    Clipboard.SetText(bindingCalcul.StrCalcul);
+                    bindingCalcul.StrCalcul = "";
+                    break;
+                case "Copy":
+                    Clipboard.SetText(bindingCalcul.StrCalcul);
+                    break;
+                case "Paste":
+                    bindingCalcul.StrCalcul += Clipboard.GetText();
+                    break;
+            }
+            
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
@@ -479,8 +463,15 @@ namespace Calculatrice
                     AddCharToCalculStr(str);
                     break;
                 case Key.C:
-                    str += "cos(";
-                    AddCharToCalculStr(str);
+                    if(Keyboard.Modifiers == ModifierKeys.Control)
+                    {
+                        Clipboard.SetText(bindingCalcul.StrCalcul);
+                    }
+                    else
+                    {
+                        str += "cos(";
+                        AddCharToCalculStr(str);
+                    }                  
                     break;
                 case Key.A:
                     str += "abs(";
@@ -493,6 +484,18 @@ namespace Calculatrice
                 case Key.L:
                     str += "log(";
                     AddCharToCalculStr(str);
+                    break;
+
+                case Key.X:
+                    if (Keyboard.Modifiers == ModifierKeys.Control)
+                    {
+                        Clipboard.SetText(bindingCalcul.StrCalcul);
+                        bindingCalcul.StrCalcul = "";
+                    }
+                    break;
+                case Key.V:
+                    if (Keyboard.Modifiers == ModifierKeys.Control)
+                        bindingCalcul.StrCalcul += Clipboard.GetText();
                     break;
 
             }
@@ -621,7 +624,7 @@ namespace Calculatrice
                     {
                         str = Service.Calculateur.replaceForgotOperande(str);
                         bindingCalcul.History.Insert(0, str.Replace('N', '-'));
-                        str = Service.Calculateur.replaceSinCosTan(str);
+                        str = Service.Calculateur.replaceSinCosTan(str, bindingCalcul.IsDeg);
                         str = Service.Calculateur.replaceBigNumber(str);
                         Operation op = Service.Calculateur.buildOperationsTree(str);
                         double resultat = Service.Calculateur.calcul(op);
@@ -714,7 +717,7 @@ namespace Calculatrice
                     if (Char.Equals(str.ElementAt(i - 1), '('))
                     {
                         bindingCalcul.AffErreur = true;
-                        bindingCalcul.Erreur = "Parenthèses vide";
+                        bindingCalcul.Erreur = "Parenthèse vide";
                         return false;
                     }
 

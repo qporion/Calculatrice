@@ -11,13 +11,14 @@ namespace Calculatrice.Model
     class BindingCalcul : INotifyPropertyChanged
     {
         private String strCalcul, erreur;
-        private bool affErreur;
+        private bool affErreur, isDeg;
 
         public BindingCalcul()
         {
             this.strCalcul = "";
             this.erreur = "";
             this.affErreur = false;
+            this.isDeg = false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -68,6 +69,23 @@ namespace Calculatrice.Model
                 {
                     this.affErreur = value;
                     NotifyPropertyChanged(nameof(affErreur));
+                }
+            }
+        }
+
+        public bool IsDeg
+        {
+            get
+            {
+                return this.isDeg;
+            }
+
+            set
+            {
+                if (value != this.isDeg)
+                {
+                    this.isDeg = value;
+                    NotifyPropertyChanged(nameof(isDeg));
                 }
             }
         }
