@@ -3,9 +3,9 @@
 ## Frontend
 
 * Tout ce qui apparait à l'écran est saisissable au clavier
-* Possibilité de supprimer le dernier caractère avec la touche DEL ou avec le bouton flêche
-* Supprimer toute la ligne saisie avec la touche SUPPR ou avec le bouton C
-* Supprimer tout l'historique avec le bouton CE
+* Possibilité de supprimer le dernier caractère avec la touche `DEL` ou avec le bouton flêche `←`
+* Supprimer toute la ligne saisie avec la touche `SUPPR` ou avec le bouton `C`
+* Supprimer tout l'historique avec le bouton `CE`
 * Réagencement des items avec le drag and drop
 * Double click sur un élément de l'historique pour le reprendre
 
