@@ -44,6 +44,55 @@ namespace UnitTestProject1
             }
         }
 
+        [TestMethod]
+        public void TestReplaceNegative()
+        {
+            String str = Calculatrice.Service.Calculateur.replaceNegativeNumber("-9,31632416572502");
+
+            Assert.AreEqual("N9,31632416572502", str);
+
+            str = Calculatrice.Service.Calculateur.replaceNegativeNumber("--9,31632416572502");
+
+            Assert.AreEqual("NN9,31632416572502", str);
+
+            str = Calculatrice.Service.Calculateur.replaceNegativeNumber("---9,31632416572502");
+
+            Assert.AreEqual("NNN9,31632416572502", str);
+
+
+            str = Calculatrice.Service.Calculateur.replaceNegativeNumber("9-9,31632416572502");
+
+            Assert.AreEqual("9-9,31632416572502", str);
+        }
+
+        [TestMethod]
+        public void TestReplaceBigNumber()
+        {
+            String str = Calculatrice.Service.Calculateur.replaceBigNumber("2+2,06440484352265E+28");
+
+            Assert.AreEqual("2+2,06440484352265E28", str); 
+        }
+
+        [TestMethod]
+        public void TestReplaceForgotOperande()
+        {
+            String str = Calculatrice.Service.Calculateur.replaceForgotOperande("5*6/3+4(-3*2+1)3+3*4");
+
+            Assert.AreEqual("5*6/3+4*(-3*2+1)*3+3*4", str);
+        }
+
+        [TestMethod]
+        public void TestReplaceSinCosTan()
+        {
+            String str = Calculatrice.Service.Calculateur.replaceSinCosTan("sin(cos(tan(exp(log(8)))))");
+
+            Assert.AreEqual("0,764032254013142", str);
+
+            str = Calculatrice.Service.Calculateur.replaceSinCosTan("log(0)*log(0)");
+
+            Assert.AreEqual("N∞*N∞", str);
+        }
+
         private void AssertCalcul(String strCalcul, String expected)
         {
             Calculatrice.Service.Calculateur.replaceNegativeNumber(strCalcul);
