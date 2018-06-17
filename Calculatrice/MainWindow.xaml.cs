@@ -63,6 +63,8 @@ namespace Calculatrice
             testsNonRegression.Add("sqrt(4)");
             testsNonRegression.Add("sin(cos(tan(exp(log(8)))))");
             testsNonRegression.Add("abs(-4)");
+            testsNonRegression.Add("4/-5+6");
+            testsNonRegression.Add("9+exp(60+3)*9");
 
             foreach (String str in testsNonRegression)
             {
@@ -90,12 +92,16 @@ namespace Calculatrice
        
         private void Erase_Button(object sender, RoutedEventArgs e)
         {
+            bindingCalcul.AffErreur = false;
+
             bindingCalcul.StrCalcul = "";
             SetFocus();
         }
 
         private void Del_Button(object sender, RoutedEventArgs e)
         {
+            bindingCalcul.AffErreur = false;
+
             if (bindingCalcul.StrCalcul.Length > 0) {
                 bindingCalcul.StrCalcul = removeLastCharacter(bindingCalcul.StrCalcul);
             }
@@ -104,6 +110,8 @@ namespace Calculatrice
 
         private void ClearHistory_Button(object sender, RoutedEventArgs e)
         {
+            bindingCalcul.AffErreur = false;
+
             bindingCalcul.StrCalcul = "";
             bindingCalcul.History.Clear();
             SetFocus();
@@ -264,6 +272,8 @@ namespace Calculatrice
 
         private void DoubleClickHistory_Event(object sender, RoutedEventArgs e)
         {
+            bindingCalcul.AffErreur = false;
+
             ListBox list = (ListBox) sender;
 
             if (list.SelectedItem != null)
@@ -314,9 +324,18 @@ namespace Calculatrice
 
             if (verifyString(str) && cptParantheses >= 0) 
             {
+                str = escapeThousandNumber(str);
                 str = str.Replace('N', '-');
+                
                 bindingCalcul.StrCalcul = str;
             }
+           
+        }
+
+        //@TODO 
+        private String escapeThousandNumber(String str)
+        {
+            return str;
         }
 
         private void CalculStr(String str)
@@ -332,6 +351,7 @@ namespace Calculatrice
                         str = Service.Calculateur.replaceForgotOperande(str);
                         bindingCalcul.History.Insert(0, str.Replace('N', '-'));
                         str = Service.Calculateur.replaceSinCosTan(str);
+                        str = Service.Calculateur.replaceBigNumber(str);
                         Operation op = Service.Calculateur.buildOperationsTree(str);
                         bindingCalcul.StrCalcul = Service.Calculateur.calcul(op).ToString();
                     }
@@ -387,9 +407,12 @@ namespace Calculatrice
                 {
                     if (!Char.IsDigit(str.ElementAtOrDefault(i - 1)) && !Char.Equals(str.ElementAtOrDefault(i-1), ')'))
                     {
-                        bindingCalcul.AffErreur = true;
-                        bindingCalcul.Erreur = "Opérande invalide";
-                        return false;
+                        if ( !Char.Equals(str.ElementAtOrDefault(i), '+') || !(Char.Equals(str.ElementAtOrDefault(i), '+') && Char.Equals(str.ElementAtOrDefault(i - 1), 'E')))
+                        {
+                            bindingCalcul.AffErreur = true;
+                            bindingCalcul.Erreur = "Opérande invalide";
+                            return false;
+                        }
                     }
                 }
             }

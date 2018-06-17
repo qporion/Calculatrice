@@ -8,7 +8,26 @@ using System.Threading.Tasks;
 namespace Calculatrice.Service
 {
     class Calculateur
-    {  
+    {
+        public static String replaceBigNumber(String str)
+        {
+            String strReturn = "";
+            for (var i = 0; i < str.Length; i++)
+            {
+                if (Char.Equals(str.ElementAt(i), 'E') && Char.Equals(str.ElementAtOrDefault(i + 1), '+'))
+                {
+                    strReturn += 'E';
+                    i++;
+                }
+                else
+                {
+                    strReturn += str.ElementAt(i);
+                }
+            }
+
+            return strReturn;
+        }
+
         public static String replaceNegativeNumber(String str)
         {
             String strReturn = "";
@@ -262,7 +281,6 @@ namespace Calculatrice.Service
                     {
                         case (char)Operande.Plus:
                         case (char)Operande.Moins:
-
                             //Si un enfant est envoyé c'est par les multiplication ou division, on le met à gauche
                             //Sinon on met tout ce qui est à gauche de l'opérande dans l'enfant de gauche et pareil pour la droite
                             if (leftValue == null)
@@ -293,7 +311,7 @@ namespace Calculatrice.Service
                             int idxEnd = 0;
                             for (int i = idx + 1; i < str.Length; i++)
                             {
-                                if (!Char.IsDigit(str.ElementAt(i)) && !Char.Equals(str.ElementAt(i), ','))
+                                if (!Char.IsDigit(str.ElementAt(i)) && !Char.Equals(str.ElementAt(i), ',') && !Char.Equals(str.ElementAt(i), 'N'))
                                 {
                                     idxEnd = i;
 
@@ -337,7 +355,7 @@ namespace Calculatrice.Service
                             }
                             else
                             {
-                                rightvalue.value = Convert.ToDouble(str.Substring(idx + 1, idxEnd - (idx + 1)));
+                                rightvalue.value = Convert.ToDouble(convertNegativeNumber(str.Substring(idx + 1, idxEnd - (idx + 1))));
                             }
 
                             op.valueRight = rightvalue;
@@ -350,30 +368,43 @@ namespace Calculatrice.Service
                     }
                 }
 
-                if (Char.Equals('N', str.ElementAt(0)))
-                {
-                    int cptN = 0;
-                    int idx = 0;
-
-                    while(idx < str.Length)
-                    {
-                        if (Char.Equals('N', str.ElementAt(idx++)))
-                            cptN++;
-                        else
-                            break;
-                    }
-
-                    if (cptN % 2 == 0)
-                        str = str.Substring(cptN);
-                    else
-                        str = '-' + str.Substring(cptN);
-                    
-                }
+                str = convertNegativeNumber(str);
 
                 op.value = Convert.ToDouble(str);
             }
 
             return op;
+        }
+
+        private static String convertNegativeNumber(String str)
+        {
+            if (Char.Equals('N', str.ElementAt(0)))
+            {
+                int cptN = 0;
+                int idx = 0;
+
+                while (idx < str.Length)
+                {
+                    if (Char.Equals('N', str.ElementAt(idx++)))
+                        cptN++;
+                    else
+                        break;
+                }
+
+                if (cptN % 2 == 0)
+                    str = str.Substring(cptN);
+                else
+                    str = '-' + str.Substring(cptN);
+
+            }
+
+            if (str.Contains('E'))
+            {
+                String strTmp = str.Substring(0, str.IndexOf('E') + 1);
+                strTmp += '+' + str.Substring(str.IndexOf('E') + 1);
+                str = strTmp;
+            }
+            return str;
         }
 
         public static double calcul(Operation ops)

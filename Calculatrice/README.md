@@ -4,4 +4,4 @@
 
 * [ ] Clavier
 * [ ] Chiffres trop gros
-* [ ] Chiffres améliorés
+* [ ] Chiffres améliorés	
