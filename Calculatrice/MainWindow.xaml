@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:Calculatrice"
         mc:Ignorable="d"
         Title="Calculatrice" Height="733" Width="443" HorizontalAlignment="Center" VerticalAlignment="Center"
-        PreviewKeyDown="OnKeyDownHandler">
+        PreviewKeyDown="OnKeyDownHandler" 
+        >
 
     <Window.Resources>
         <ResourceDictionary>
@@ -19,7 +20,7 @@
 
 
 
-    <Grid Margin="0" Background="DimGray" >
+    <Grid Margin="0" Background="DimGray">
         <Grid.RowDefinitions>
             <RowDefinition Height="201*" />
             <RowDefinition Height="51*" />
@@ -27,11 +28,11 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100*" />
             <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="0*" />
         </Grid.ColumnDefinitions>
 
-        <ListBox ItemsSource="{Binding Path=History}" HorizontalContentAlignment="Left" MouseDoubleClick="DoubleClickHistory_Event">
+        <ListBox MouseLeftButtonDown="HandleMouseLeftButtonDown" MouseLeftButtonUp="HandleMouseLeftButtonUp" MouseMove="HandleMouseMove" ItemsSource="{Binding Path=History}" HorizontalContentAlignment="Left" MouseDoubleClick="DoubleClickHistory_Event">
         </ListBox>
 
         <GridSplitter 
@@ -40,27 +41,24 @@
             Height="Auto"
             HorizontalAlignment="Right" 
             VerticalAlignment="Stretch" 
-            Margin="0"/>
-        
+            Margin="0" Grid.RowSpan="3"/>
+
         <GridSplitter 
             ResizeDirection="Rows"
-            Width="Auto" 
             Height="3"
             HorizontalAlignment="Stretch" 
-            VerticalAlignment="Bottom" 
-            Margin="0"/>
-        <Viewbox Stretch="Uniform" Grid.Row="1" >
+            VerticalAlignment="Bottom" Grid.ColumnSpan="2"/>
+        <Viewbox Stretch="Uniform" Grid.Row="1"  MouseLeftButtonDown="HandleMouseLeftButtonDown" MouseLeftButtonUp="HandleMouseLeftButtonUp" MouseMove="HandleMouseMove">
             <TextBlock Text="{Binding Path=StrCalcul}" TextWrapping="Wrap" TextAlignment="Center" FontWeight="Bold" Foreground="White"></TextBlock>
         </Viewbox>
         <GridSplitter 
             Grid.Row="1"
             ResizeDirection="Rows"
-            Width="Auto" 
             Height="3"
             HorizontalAlignment="Stretch" 
             VerticalAlignment="Bottom" 
-            Margin="0"/>
-        <Grid  Grid.Row="2" Background="White">
+            Margin="0" Grid.ColumnSpan="2"/>
+        <Grid  Grid.Row="2" Background="White" MouseLeftButtonDown="HandleMouseLeftButtonDown" MouseLeftButtonUp="HandleMouseLeftButtonUp" MouseMove="HandleMouseMove">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*" />
                 <RowDefinition Height="1*" />
@@ -104,7 +102,7 @@
             <Button Content="exp" Grid.Column="3" Style="{StaticResource OrangeButton}" Click="Button_Click"/>
             <Button Content="log" Grid.Column="4" Style="{StaticResource OrangeButton}" Click="Button_Click"/>
             <Button Content="sqrt" Grid.Column="5" Style="{StaticResource OrangeButton}" Click="Button_Click"/>
-            
+
             <Button Content="%" Grid.Row="2" Grid.Column="5" Style="{StaticResource OrangeButton}" Click="Button_Click"/>
             <Button Content="abs" Grid.Row="3" Grid.Column="5" Style="{StaticResource OrangeButton}" Click="Button_Click"/>
             <Button Content="cos"  Grid.Row="1" Grid.Column="4" Style="{StaticResource OrangeButton}" Click="Button_Click"/>
@@ -113,7 +111,7 @@
             <Button Content="=" Grid.RowSpan="1" Grid.Row="4" Grid.Column="5" Style="{StaticResource ChocolateButton}" Click="Calcul_Click" Background="Chocolate"/>
 
         </Grid>
-        <Viewbox Stretch="Uniform" Grid.Row="3">
+        <Viewbox Stretch="Uniform" Grid.Row="3" Grid.ColumnSpan="2" MaxWidth="300">
             <TextBlock Foreground="DarkRed" Text="{Binding Path=Erreur}" TextWrapping="Wrap" TextAlignment="Center" FontWeight="Bold" Opacity="0">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
