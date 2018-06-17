@@ -36,8 +36,9 @@ namespace UnitTestProject1
             testsNonRegression.Add("4/-5+6", "5,2");
             testsNonRegression.Add("9+exp(60+3)*9", "2,06440484352265E+28");
             testsNonRegression.Add("(3*4+2)*cos(5*3+6)+1", "-6,66820964313975");
+            testsNonRegression.Add("log(0)*log(0)", "∞");
 
-            foreach(KeyValuePair<String, String> row in testsNonRegression)
+            foreach (KeyValuePair<String, String> row in testsNonRegression)
             {
                 AssertCalcul(row.Key, row.Value);
             }
