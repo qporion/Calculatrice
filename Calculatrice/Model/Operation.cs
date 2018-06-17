@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Calculatrice.Model
 {
-    class Operation
+    public class Operation
     {
         public Operation valueLeft { get; set; }
         public Operation valueRight { get; set; }

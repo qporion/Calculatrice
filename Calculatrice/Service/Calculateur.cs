@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Calculatrice.Service
 {
-    class Calculateur
+    public class Calculateur
     {
         public static String replaceBigNumber(String str)
         {
@@ -60,9 +60,9 @@ namespace Calculatrice.Service
             triggers.Add('a');
 
             int i = 0;
-            while ( i < listStr.Count)
+            while (i < listStr.Count)
             {
-                if(triggers.Contains(listStr.ElementAt(i)))
+                if (triggers.Contains(listStr.ElementAt(i)))
                 {
                     int idxStart = i;
                     String sinCosTan = "";
@@ -88,10 +88,10 @@ namespace Calculatrice.Service
                             cptPrantheses.Pop();
                         }
 
-                            if (i >= listStr.Count)
+                        if (i >= listStr.Count)
                         {
                             break;
-                        } 
+                        }
                     }
 
                     int lengthStart = 4;
@@ -100,7 +100,7 @@ namespace Calculatrice.Service
 
                     sinCosTan = sinCosTan.Substring(lengthStart, sinCosTan.Length - lengthStart);
 
-                    if(isRecursive)
+                    if (isRecursive)
                     {
                         sinCosTan = replaceSinCosTan(sinCosTan);
                     }
@@ -112,9 +112,10 @@ namespace Calculatrice.Service
                     Operation op = buildOperationsTree(sinCosTan);
                     double value = calcul(op);
 
-                    switch(listStr.ElementAt(idxStart)) {
+                    switch (listStr.ElementAt(idxStart))
+                    {
                         case 's':
-                            switch(listStr.ElementAt(idxStart+1))
+                            switch (listStr.ElementAt(idxStart + 1))
                             {
                                 case 'i':
                                     value = Math.Sin(value);
@@ -143,11 +144,11 @@ namespace Calculatrice.Service
                     strResult += value;
                 }
                 else
-                { 
+                {
                     strResult += listStr.ElementAt(i);
-                } 
+                }
 
-                
+
                 i++;
             }
             strResult = replaceNegativeNumber(strResult);
@@ -247,7 +248,8 @@ namespace Calculatrice.Service
                             idxStart = i + 1;
                         }
 
-                        if (!Char.IsDigit(strAfterParantheses.ElementAt(i)) && !Char.Equals(strAfterParantheses.ElementAt(i), ',') && cptParantheses == 0)
+                        if (!Char.IsDigit(strAfterParantheses.ElementAt(i)) && !Char.Equals(strAfterParantheses.ElementAt(i), ',') && !Char.Equals(strAfterParantheses.ElementAt(i), 'N')
+                            && !Char.Equals(strAfterParantheses.ElementAt(i), 'E') && cptParantheses == 0)
                         {
                             idxEnd = i;
                             break;

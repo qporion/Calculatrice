@@ -42,29 +42,31 @@ namespace Calculatrice
 
             // List de tests @TODO rajouter des tests pour chaque bug rencontré
             List<String> testsNonRegression = new List<String>();
-            testsNonRegression.Add("5+3+(3*4+2)*(5*3+6)+1-3");
-            testsNonRegression.Add("5*6/3+(3*2+1)+3*4+(5*6+(6/9)*5+5-(4+6+(4+5)))");
-            testsNonRegression.Add("5*6/3+(3*2+1)+3*4");
-            testsNonRegression.Add("5+3*4+2");
-            testsNonRegression.Add("5,4543+3,454+(3,565*4,3+2,0034)*(5,43*3+6)+1,34-3");
-            testsNonRegression.Add("-5+3*4+2");
-            testsNonRegression.Add("5*6/3+4(-3*2+1)3+3*4");
-            testsNonRegression.Add("9+(6+3)*9");
-            testsNonRegression.Add("cos(60)+3");
-            testsNonRegression.Add("9+sin(30)");
-            testsNonRegression.Add("9+cos(60+3)*9");
-            testsNonRegression.Add("9+sin(6+30)*9");
-            testsNonRegression.Add("5*6/3+(3*2+1)+3*4+sin(5*6+(6/9)*5+5-(4+6+(4+5)))");
-            testsNonRegression.Add("5,4543+3,454+(3,565*4,3+2,0034)*cos(5,43*3+6)+1,34-3");
-            testsNonRegression.Add("9+-sin(6+30)*9");
-            testsNonRegression.Add("9+tan(60+3)*9");
-            testsNonRegression.Add("9+exp(6+3)*9");
+            /*  testsNonRegression.Add("5+3+(3*4+2)*(5*3+6)+1-3");
+              testsNonRegression.Add("5*6/3+(3*2+1)+3*4+(5*6+(6/9)*5+5-(4+6+(4+5)))");
+              testsNonRegression.Add("5*6/3+(3*2+1)+3*4");
+              testsNonRegression.Add("5+3*4+2");
+              testsNonRegression.Add("5,4543+3,454+(3,565*4,3+2,0034)*(5,43*3+6)+1,34-3");
+              testsNonRegression.Add("-5+3*4+2");
+              testsNonRegression.Add("5*6/3+4(-3*2+1)3+3*4");
+              testsNonRegression.Add("9+(6+3)*9");
+              testsNonRegression.Add("cos(60)+3");
+              testsNonRegression.Add("9+sin(30)");
+              testsNonRegression.Add("9+cos(60+3)*9");
+              testsNonRegression.Add("9+sin(6+30)*9");
+              testsNonRegression.Add("5*6/3+(3*2+1)+3*4+sin(5*6+(6/9)*5+5-(4+6+(4+5)))");
+              testsNonRegression.Add("5,4543+3,454+(3,565*4,3+2,0034)*cos(5,43*3+6)+1,34-3");
+              testsNonRegression.Add("9+-sin(6+30)*9");
+              testsNonRegression.Add("9+tan(60+3)*9");
+              testsNonRegression.Add("9+exp(6+3)*9");
+              testsNonRegression.Add("9+log(60+3)*9");
+              testsNonRegression.Add("sqrt(4)");
+              testsNonRegression.Add("sin(cos(tan(exp(log(8)))))");
+              testsNonRegression.Add("abs(-4)");
+              testsNonRegression.Add("4/-5+6");
+              testsNonRegression.Add("9+exp(60+3)*9");*/
+            //testsNonRegression.Add("(3*4+2)*cos(5*3+6)+1");
             testsNonRegression.Add("9+log(60+3)*9");
-            testsNonRegression.Add("sqrt(4)");
-            testsNonRegression.Add("sin(cos(tan(exp(log(8)))))");
-            testsNonRegression.Add("abs(-4)");
-            testsNonRegression.Add("4/-5+6");
-            testsNonRegression.Add("9+exp(60+3)*9");
 
             foreach (String str in testsNonRegression)
             {
