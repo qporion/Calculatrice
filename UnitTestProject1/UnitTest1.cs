@@ -37,6 +37,7 @@ namespace UnitTestProject1
             testsNonRegression.Add("9+exp(60+3)*9", "2,06440484352265E+28");
             testsNonRegression.Add("(3*4+2)*cos(5*3+6)+1", "-6,66820964313975");
             testsNonRegression.Add("log(0)*log(0)", "∞");
+            testsNonRegression.Add("9/0", "NaN");
 
             foreach (KeyValuePair<String, String> row in testsNonRegression)
             {

@@ -427,9 +427,9 @@ namespace Calculatrice.Service
                     case "*":
                         return left * right;
                     case "/":
-                        if (right == 0) //@TODO gérer exception
+                        if (right == 0)
                         {
-                            return 0;
+                            return Double.NaN;
                         }
                         return left / right;
                     case "%":

@@ -40,8 +40,8 @@ namespace Calculatrice
             listPattern.Add('*');
             listPattern.Add('%');
 
-            // List de tests @TODO rajouter des tests pour chaque bug rencontré
-            List<String> testsNonRegression = new List<String>();
+            // List de tests @TODO rajouter des tests pour chaque bug rencontré ---->> Test unitaires now
+            /*List<String> testsNonRegression = new List<String>();
             testsNonRegression.Add("5+3+(3*4+2)*(5*3+6)+1-3");
             testsNonRegression.Add("5*6/3+(3*2+1)+3*4+(5*6+(6/9)*5+5-(4+6+(4+5)))");
             testsNonRegression.Add("5*6/3+(3*2+1)+3*4");
@@ -71,7 +71,7 @@ namespace Calculatrice
             foreach (String str in testsNonRegression)
             {
                 CalculStr(str);
-            }
+            }*/
 
             SetFocus();
         }
@@ -562,10 +562,51 @@ namespace Calculatrice
 
         }
 
-        //@TODO 
         private String escapeThousandNumber(String str)
         {
-            return str;
+            String strResult = "";
+            str = str.Replace(" ", String.Empty);
+
+            String strPartWithEscape = "", strPartWithoutEscape = "";
+            int cptNumber = 0;
+            for (int i=str.Length-1; i>=0; i--)
+            {
+                strPartWithoutEscape = str.ElementAt(i) + strPartWithoutEscape;
+
+                if(Char.IsNumber(str.ElementAt(i)))
+                {
+                    cptNumber++;
+                }
+
+                if (cptNumber == 3)
+                {
+                    cptNumber = 0;
+                    strPartWithEscape = " " + str.ElementAt(i) + strPartWithEscape;
+                }
+                else
+                {
+                    strPartWithEscape = str.ElementAt(i) + strPartWithEscape;
+                }
+
+                if (listPattern.Contains(str.ElementAt(i)))
+                {
+                    strResult = strPartWithEscape + strResult;
+                    strPartWithEscape = "";
+                    strPartWithoutEscape = "";
+                    cptNumber = 0;
+                }
+
+                if (Char.Equals(str.ElementAt(i), ','))
+                {
+                    strResult = strPartWithoutEscape + strResult;
+                    strPartWithEscape = "";
+                    strPartWithoutEscape = "";
+                    cptNumber = 0;
+                }
+            }
+
+            strResult = strPartWithEscape + strResult;
+            return strResult;
         }
 
         private void CalculStr(String str)
@@ -583,7 +624,14 @@ namespace Calculatrice
                         str = Service.Calculateur.replaceSinCosTan(str);
                         str = Service.Calculateur.replaceBigNumber(str);
                         Operation op = Service.Calculateur.buildOperationsTree(str);
-                        bindingCalcul.StrCalcul = Service.Calculateur.calcul(op).ToString();
+                        double resultat = Service.Calculateur.calcul(op);
+                        if(resultat.Equals(Double.NaN))
+                        {
+                            bindingCalcul.AffErreur = true;
+                            bindingCalcul.Erreur = "Division par 0";
+                        }
+
+                        bindingCalcul.StrCalcul = escapeThousandNumber(resultat.ToString());
                     }
                 }
             }
