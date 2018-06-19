@@ -36,8 +36,8 @@ namespace UnitTestProject1
             testsNonRegression.Add("4/-5+6", "5,2");
             testsNonRegression.Add("9+exp(60+3)*9", "2,06440484352265E+28");
             testsNonRegression.Add("(3*4+2)*cos(5*3+6)+1", "-6,66820964313975");
-            testsNonRegression.Add("log(0)*log(0)", "∞");
-            testsNonRegression.Add("9/0", "NaN");
+            testsNonRegression.Add("log(0)*log(0)", Double.PositiveInfinity.ToString());
+            testsNonRegression.Add("9/0", Double.NaN.ToString());
             testsNonRegression.Add("9sin(9)", "3,70906636717581");
 
             foreach (KeyValuePair<String, String> row in testsNonRegression)
@@ -92,7 +92,7 @@ namespace UnitTestProject1
 
             str = Calculatrice.Service.Calculateur.replaceSinCosTan("log(0)*log(0)", false);
 
-            Assert.AreEqual("N∞*N∞", str);
+            Assert.AreEqual("N"+Double.PositiveInfinity.ToString().Substring(1)+"*N"+Double.PositiveInfinity.ToString().Substring(1), str);
         }
 
         private void AssertCalcul(String strCalcul, String expected)

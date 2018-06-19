@@ -32,3 +32,8 @@ D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\
 D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\Ressources\ListBox.baml
 D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\Ressources\Toolbar.baml
 D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\Ressources\Checkbox.baml
+F:\c#\Calculatrice\Calculatrice\obj\Debug\Ressources\Buttons.g.cs
+F:\c#\Calculatrice\Calculatrice\obj\Debug\Ressources\Buttons.baml
+F:\c#\Calculatrice\Calculatrice\obj\Debug\Ressources\Checkbox.baml
+F:\c#\Calculatrice\Calculatrice\obj\Debug\Ressources\ListBox.baml
+F:\c#\Calculatrice\Calculatrice\obj\Debug\Ressources\Toolbar.baml

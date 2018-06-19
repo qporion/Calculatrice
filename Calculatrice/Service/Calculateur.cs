@@ -328,8 +328,13 @@ namespace Calculatrice.Service
                             int idxEnd = 0;
                             for (int i = idx + 1; i < str.Length; i++)
                             {
-                                if (!Char.IsDigit(str.ElementAt(i)) && !Char.Equals(str.ElementAt(i), ',') && !Char.Equals(str.ElementAt(i), 'N')
-                                    && !Char.Equals(str.ElementAt(i), 'E') && !Char.Equals(str.ElementAt(i), '∞'))
+
+                                if (str.Substring(i).StartsWith(Double.PositiveInfinity.ToString().Substring(1)))
+                                {
+                                    i += Double.PositiveInfinity.ToString().Length - 1;
+                                }
+                                else if (!Char.IsDigit(str.ElementAt(i)) && !Char.Equals(str.ElementAt(i), ',') && !Char.Equals(str.ElementAt(i), 'N')
+                                    && !Char.Equals(str.ElementAt(i), 'E'))
                                 {
                                     idxEnd = i;
 
@@ -364,7 +369,7 @@ namespace Calculatrice.Service
 
                             if (idxEnd == 0)
                             {
-                                rightvalue.value = Convert.ToDouble(convertNegativeNumber(str.Substring(idx + 1)));
+                                rightvalue.value = Double.Parse(convertNegativeNumber(str.Substring(idx + 1)));
                             }
                             else if (isParentheses)
                             {
@@ -373,7 +378,7 @@ namespace Calculatrice.Service
                             }
                             else
                             {
-                                rightvalue.value = Convert.ToDouble(convertNegativeNumber(str.Substring(idx + 1, idxEnd - (idx + 1))));
+                                rightvalue.value = Double.Parse(convertNegativeNumber(str.Substring(idx + 1, idxEnd - (idx + 1))));
                             }
 
                             op.valueRight = rightvalue;
@@ -385,7 +390,7 @@ namespace Calculatrice.Service
                             return buildOperationsTree(str.Substring(idxEnd), op);
                     }
                 }
-                op.value = Convert.ToDouble(convertNegativeNumber(str));
+                op.value = Double.Parse(convertNegativeNumber(str));
             }
 
             return op;
@@ -419,6 +424,9 @@ namespace Calculatrice.Service
                 strTmp += '+' + str.Substring(str.IndexOf('E') + 1);
                 str = strTmp;
             }
+
+            //str = str.Replace("Infini", "∞");
+
             return str;
         }
 

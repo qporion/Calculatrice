@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\obj\Debug\
+F:\c#\Calculatrice\Calculatrice\obj\Debug\
 Calculatrice
 none
 false
 DEBUG;TRACE
-D:\Quentin\Documents\Visual Studio 2017\Workspace\Calculatrice\Calculatrice\App.xaml
+F:\c#\Calculatrice\Calculatrice\App.xaml
 5535166287
 
-12-179151962
+12-100805985
 13738642453
 Ressources\Buttons.xaml;MainWindow.xaml;Ressources\Checkbox.xaml;Ressources\ListBox.xaml;Ressources\Toolbar.xaml;
 
-False
+True
 

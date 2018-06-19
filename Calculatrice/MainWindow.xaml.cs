@@ -38,7 +38,8 @@ namespace Calculatrice
             listPattern.Add('*');
             listPattern.Add('%');
 
-            SetFocus();
+            this.Focusable = true;
+            Keyboard.Focus(this);
         }
 
         Point _currentPoint, _anchorPoint;
@@ -300,7 +301,7 @@ namespace Calculatrice
             }
 
             AddCharToCalculStr(str);
-            SetFocus();
+            RemoveFocus((Button)sender);
         }
 
         private void Erase_Button(object sender, RoutedEventArgs e)
@@ -308,7 +309,7 @@ namespace Calculatrice
             bindingCalcul.AffErreur = false;
 
             bindingCalcul.StrCalcul = "";
-            SetFocus();
+            RemoveFocus((Button)sender);
         }
 
         private void Del_Button(object sender, RoutedEventArgs e)
@@ -319,7 +320,7 @@ namespace Calculatrice
             {
                 bindingCalcul.StrCalcul = removeLastCharacter(bindingCalcul.StrCalcul);
             }
-            SetFocus();
+            RemoveFocus((Button)sender);
         }
 
         private void ClearHistory_Button(object sender, RoutedEventArgs e)
@@ -328,7 +329,7 @@ namespace Calculatrice
 
             bindingCalcul.StrCalcul = "";
             bindingCalcul.History.Clear();
-            SetFocus();
+            RemoveFocus((Button) sender);
         }
 
         private void Calcul_Click(object sender, RoutedEventArgs e)
@@ -336,7 +337,7 @@ namespace Calculatrice
             String str = bindingCalcul.StrCalcul;
 
             CalculStr(str);
-            SetFocus();
+            RemoveFocus((Button)sender);
         }
 
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
@@ -451,11 +452,17 @@ namespace Calculatrice
                     AddCharToCalculStr(str);
                     break;
                 case Key.I:
-                    str += "in(";
+                    if (Char.Equals(str.ElementAt(str.Length - 1), 's'))
+                    {
+                        str += "in(";
+                    }
                     AddCharToCalculStr(str);
                     break;
                 case Key.Q:
-                    str += "qrt(";
+                    if (Char.Equals(str.ElementAt(str.Length - 1), 's'))
+                    {
+                        str += "qrt(";
+                    }
                     AddCharToCalculStr(str);
                     break;
                 case Key.T:
@@ -535,7 +542,6 @@ namespace Calculatrice
                     break;
             }
 
-            SetFocus();
         }
 
         private void DoubleClickHistory_Event(object sender, RoutedEventArgs e)
@@ -603,7 +609,6 @@ namespace Calculatrice
         private String escapeThousandNumber(String str)
         {
             String strResult = "";
-            str = str.Replace(" ", String.Empty);
 
             String strPartWithEscape = "", strPartWithoutEscape = "";
             int cptNumber = 0;
@@ -657,19 +662,28 @@ namespace Calculatrice
                 {
                     if (validParantheses(str))
                     {
-                        str = Service.Calculateur.replaceForgotOperande(str);
-                        bindingCalcul.History.Insert(0, str.Replace('N', '-'));
-                        str = Service.Calculateur.replaceSinCosTan(str, bindingCalcul.IsDeg);
-                        str = Service.Calculateur.replaceBigNumber(str);
-                        Operation op = Service.Calculateur.buildOperationsTree(str);
-                        double resultat = Service.Calculateur.calcul(op);
-                        if(resultat.Equals(Double.NaN))
+                        if (this.listPattern.Contains(str.ElementAt(str.Length - 1)) || this.listPattern.Contains(str.ElementAt(0)))
                         {
                             bindingCalcul.AffErreur = true;
-                            bindingCalcul.Erreur = "Division par 0";
+                            bindingCalcul.Erreur = "Chaine invalide";
                         }
+                        else
+                        {
+                            str = str.Replace(" ", String.Empty);
+                            str = Service.Calculateur.replaceForgotOperande(str);
+                            bindingCalcul.History.Insert(0, str.Replace('N', '-'));
+                            str = Service.Calculateur.replaceSinCosTan(str, bindingCalcul.IsDeg);
+                            str = Service.Calculateur.replaceBigNumber(str);
+                            Operation op = Service.Calculateur.buildOperationsTree(str);
+                            double resultat = Service.Calculateur.calcul(op);
+                            if (resultat.Equals(Double.NaN))
+                            {
+                                bindingCalcul.AffErreur = true;
+                                bindingCalcul.Erreur = "Division par 0";
+                            }
 
-                        bindingCalcul.StrCalcul = escapeThousandNumber(resultat.ToString());
+                            bindingCalcul.StrCalcul = escapeThousandNumber(resultat.ToString());
+                        }
                     }
                 }
             }
@@ -769,9 +783,11 @@ namespace Calculatrice
             return stack.Count == 0;
         }
 
-        private void SetFocus()
+        private void RemoveFocus(Button btn)
         {
-            this.Focusable = true;
+            var scope = FocusManager.GetFocusScope(btn);
+            FocusManager.SetFocusedElement(scope, null);
+
             Keyboard.Focus(this);
         }
     }
