@@ -329,12 +329,12 @@ namespace Calculatrice.Service
                             for (int i = idx + 1; i < str.Length; i++)
                             {
 
-                                if (str.Substring(i).StartsWith(Double.PositiveInfinity.ToString().Substring(1)))
+                                if (str.Substring(i).StartsWith(Double.NegativeInfinity.ToString().Substring(1)))
                                 {
-                                    i += Double.PositiveInfinity.ToString().Length - 1;
+                                    i += Double.NegativeInfinity.ToString().Length - 1;
                                 }
                                 else if (!Char.IsDigit(str.ElementAt(i)) && !Char.Equals(str.ElementAt(i), ',') && !Char.Equals(str.ElementAt(i), 'N')
-                                    && !Char.Equals(str.ElementAt(i), 'E'))
+                                   && !Char.Equals(str.ElementAt(i), 'E'))
                                 {
                                     idxEnd = i;
 
@@ -373,8 +373,7 @@ namespace Calculatrice.Service
                             }
                             else if (isParentheses)
                             {
-                                var tmp = str.Substring(idx + 1, idxEnd - (idx));
-                                rightvalue = buildOperationsTree(tmp);
+                                rightvalue = buildOperationsTree(str.Substring(idx + 1, idxEnd - (idx)));
                             }
                             else
                             {
@@ -387,6 +386,7 @@ namespace Calculatrice.Service
                             {
                                 return op;
                             }
+
                             return buildOperationsTree(str.Substring(idxEnd), op);
                     }
                 }

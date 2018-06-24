@@ -13,6 +13,7 @@ namespace UnitTestProject1
             // List de tests @TODO rajouter des tests pour chaque bug rencontré
             Dictionary<String, String> testsNonRegression = new Dictionary<String, String>();
             testsNonRegression.Add("5+3+(3*4+2)*(5*3+6)+1-3", "300");
+            testsNonRegression.Add("(3+6*9)-3*(6*8)", "-87");
             testsNonRegression.Add("5*6/3+(3*2+1)+3*4+(5*6+(6/9)*5+5-(4+6+(4+5)))", "48,3333333333333");
             testsNonRegression.Add("5*6/3+(3*2+1)+3*4", "29");
             testsNonRegression.Add("5+3*4+2", "19");
@@ -92,7 +93,7 @@ namespace UnitTestProject1
 
             str = Calculatrice.Service.Calculateur.replaceSinCosTan("log(0)*log(0)", false);
 
-            Assert.AreEqual("N"+Double.PositiveInfinity.ToString().Substring(1)+"*N"+Double.PositiveInfinity.ToString().Substring(1), str);
+            Assert.AreEqual("N"+Double.NegativeInfinity.ToString().Substring(1)+"*N"+Double.NegativeInfinity.ToString().Substring(1), str);
         }
 
         private void AssertCalcul(String strCalcul, String expected)
