@@ -14,6 +14,7 @@ namespace UnitTestProject1
             Dictionary<String, String> testsNonRegression = new Dictionary<String, String>();
             testsNonRegression.Add("5+3+(3*4+2)*(5*3+6)+1-3", "300");
             testsNonRegression.Add("(3+6*9)-3*(6*8)", "-87");
+            testsNonRegression.Add("(3+6*9)*(6*8)*(3+4*(5+7+(6+3*4)))", "336528");
             testsNonRegression.Add("5*6/3+(3*2+1)+3*4+(5*6+(6/9)*5+5-(4+6+(4+5)))", "48,3333333333333");
             testsNonRegression.Add("5*6/3+(3*2+1)+3*4", "29");
             testsNonRegression.Add("5+3*4+2", "19");

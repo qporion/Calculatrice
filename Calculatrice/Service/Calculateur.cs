@@ -382,7 +382,7 @@ namespace Calculatrice.Service
 
                             op.valueRight = rightvalue;
 
-                            if (idxEnd == 0)
+                            if (idxEnd == 0 || str.Length == idxEnd+1)
                             {
                                 return op;
                             }
